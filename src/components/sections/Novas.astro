@@ -1,7 +1,9 @@
 ---
+import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import PostCard from '../blog/PostCard.astro';
 import { getLangFromUrl, useTranslations, localizedPath } from '../../i18n/utils';
+import fondo from '../../assets/ui/fondo_novas.webp';
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
@@ -11,6 +13,8 @@ const ultimas = (await getCollection('blog', ({ data }) => !data.draft))
 ---
 
 <section class="section novas" id="novas" aria-labelledby="novas-titulo">
+  <Image class="novas__fondo" src={fondo} alt="" widths={[1100, 1650, 2200]} sizes="100vw" loading="lazy" aria-hidden="true" />
+
   <header class="cabeceira reveal">
     <p class="eyebrow">{t('news.eyebrow')}</p>
     <h2 id="novas-titulo">{t('news.title')}</h2>
@@ -26,6 +30,16 @@ const ultimas = (await getCollection('blog', ({ data }) => !data.draft))
 </section>
 
 <style>
+  .novas { isolation: isolate; overflow: hidden; }
+  .novas :global(.novas__fondo) {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+  }
   .zona { width: min(100% - 2rem, 66rem); margin-inline: auto; }
   .cabeceira { text-align: center; }
   .cabeceira h2 { margin-top: var(--space-2); font-size: var(--text-2xl); text-transform: uppercase; letter-spacing: 0.04em; line-height: 1.05; }
