@@ -1,0 +1,86 @@
+---
+import { Image } from 'astro:assets';
+import fondo from '../../assets/ui/fondo_bretema.webp';
+import ProdutoCard from '../ProdutoCard.astro';
+import { edicions, complementos } from '../../data/produtos';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+
+const t = useTranslations(getLangFromUrl(Astro.url));
+---
+
+<section class="section edicions-seccion" id="edicions" aria-labelledby="edicions-titulo">
+  <Image
+    class="edicions-seccion__fondo"
+    src={fondo}
+    alt=""
+    widths={[1100, 1650, 2200]}
+    sizes="100vw"
+    loading="lazy"
+    aria-hidden="true"
+  />
+
+  <header class="cabeceira reveal">
+    <p class="eyebrow">{t('editions.eyebrow')}</p>
+    <h2 id="edicions-titulo">{t('editions.title')}</h2>
+  </header>
+
+  <div class="zona edicions reveal">
+    {edicions.map((p) => <ProdutoCard produto={p} variante="grande" />)}
+  </div>
+</section>
+
+<section class="section complementos" id="complementos" aria-labelledby="complementos-titulo">
+  <div class="zona">
+    <h2 id="complementos-titulo" style="font-size: var(--text-xl)">{t('extras.title')}</h2>
+    <p class="lead" style="margin-top: var(--space-3)">{t('extras.lead')}</p>
+
+    <div class="fila reveal">
+      {complementos.map((p) => <ProdutoCard produto={p} />)}
+    </div>
+  </div>
+</section>
+
+<style>
+  .edicions-seccion { isolation: isolate; overflow: hidden; }
+  .edicions-seccion :global(.edicions-seccion__fondo) {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+  }
+
+  .zona { width: min(100% - 2rem, 66rem); margin-inline: auto; }
+
+  .cabeceira { text-align: center; }
+  .cabeceira h2 {
+    margin-top: var(--space-2);
+    font-size: var(--text-2xl);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    line-height: 1.05;
+  }
+
+  .edicions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-12) clamp(2rem, 6vw, 4.5rem);
+    margin-top: var(--space-16);
+  }
+  .fila {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-12) clamp(2rem, 5vw, 3rem);
+    margin-top: var(--space-8);
+  }
+  .complementos { padding-top: 0; }
+
+  @media (max-width: 820px) {
+    .edicions { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 640px) {
+    .fila { grid-template-columns: 1fr; }
+  }
+</style>

@@ -1,0 +1,11 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Grazas from '../components/sections/Grazas.astro';
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+
+const t = useTranslations(getLangFromUrl(Astro.url));
+---
+
+<Layout title={t('thanks.title')} noindex>
+  <Grazas />
+</Layout>

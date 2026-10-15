@@ -1,0 +1,26 @@
+---
+import { getLangFromUrl, useTranslations, localizedPath } from '../../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+
+<section class="section grazas" aria-labelledby="grazas-titulo">
+  <div class="grazas__caixa">
+    <p class="eyebrow">{t('thanks.eyebrow')}</p>
+    <h1 id="grazas-titulo">{t('thanks.title')}</h1>
+    <p class="lead">{t('thanks.text')}</p>
+    <a class="btn btn--fantasma" href={localizedPath(lang, '/')}>{t('thanks.back')}</a>
+  </div>
+</section>
+
+<script>
+  import { baleirar } from '../../lib/cart';
+  baleirar();
+</script>
+
+<style>
+  .grazas { display: grid; place-items: center; min-height: 70vh; text-align: center; }
+  .grazas__caixa { display: grid; justify-items: center; gap: var(--space-6); width: min(100% - 2rem, 40rem); }
+  .grazas h1 { font-size: var(--text-2xl); text-transform: uppercase; letter-spacing: 0.04em; line-height: 1.05; }
+</style>

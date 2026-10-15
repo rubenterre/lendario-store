@@ -1,0 +1,12 @@
+---
+import Layout from '../layouts/Layout.astro';
+import DocumentoLegal from '../components/sections/DocumentoLegal.astro';
+import { politicas } from '../data/politicas';
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+
+const t = useTranslations(getLangFromUrl(Astro.url));
+---
+
+<Layout title={t('policies.title')} description={t('policies.description')}>
+  <DocumentoLegal doc={politicas} />
+</Layout>

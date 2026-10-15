@@ -1,0 +1,113 @@
+---
+import { getLangFromUrl } from '../../i18n/utils';
+import type { Politicas } from '../../data/politicas';
+import { tenda } from '../../data/tenda';
+
+interface Props { doc: Record<'gl' | 'es', Politicas>; }
+
+const lang = getLangFromUrl(Astro.url);
+const p = Astro.props.doc[lang];
+const locale = lang === 'gl' ? 'gl-ES' : 'es-ES';
+const data = new Intl.DateTimeFormat(locale, { dateStyle: 'long' }).format(new Date(tenda.actualizado));
+const datosLegais = [tenda.titular, tenda.nif && `NIF ${tenda.nif}`, tenda.enderezo].filter(Boolean);
+---
+
+<section class="section legal" aria-labelledby="legal-titulo">
+  <div class="container legal__interior">
+    <header class="legal__cabeceira">
+      <p class="eyebrow">{p.eyebrow}</p>
+      <h1 id="legal-titulo">{p.titulo}</h1>
+      <p class="lead">{p.intro}</p>
+      <p class="legal__data">{p.actualizado}: <time datetime={tenda.actualizado}>{data}</time></p>
+    </header>
+
+    <nav class="legal__indice" aria-label={p.titulo}>
+      <ul>
+        {p.secciones.map((s) => <li><a href={`#${s.id}`}>{s.titulo}</a></li>)}
+      </ul>
+    </nav>
+
+    <div class="legal__corpo">
+      {p.secciones.map((s) => (
+        <article id={s.id} class="legal__seccion">
+          <h2>{s.titulo}</h2>
+          {s.p?.map((texto) => <p>{texto}</p>)}
+          {s.ul && <ul>{s.ul.map((item) => <li>{item}</li>)}</ul>}
+          {s.p2?.map((texto) => <p>{texto}</p>)}
+          {s.modelo && <blockquote class="legal__modelo">{s.modelo}</blockquote>}
+          {s.mostrarContacto && (
+            <>
+              {tenda.email && (
+                <p>
+                  <a class="legal__correo" href={`mailto:${tenda.email}`}>{tenda.email}</a>
+                </p>
+              )}
+              {datosLegais.length > 0 && <p class="legal__legal">{datosLegais.join(' · ')}</p>}
+            </>
+          )}
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .legal__interior {
+    display: grid;
+    gap: var(--space-12);
+    max-width: 52rem;
+  }
+  .legal__cabeceira { display: grid; gap: var(--space-3); }
+  .legal h1 {
+    font-family: var(--fonte-display);
+    font-size: var(--text-2xl);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    line-height: 1.05;
+  }
+  .legal__data { color: var(--texto-2); font-size: var(--text-sm); }
+
+  .legal__indice {
+    border: 1px solid var(--borde);
+    border-radius: var(--radio);
+    padding: var(--space-4) var(--space-6);
+  }
+  .legal__indice ul {
+    list-style: none;
+    display: grid;
+    gap: var(--space-2);
+    padding: 0;
+    margin: 0;
+  }
+  .legal__indice a { color: var(--texto-2); text-decoration: none; }
+  .legal__indice a:hover,
+  .legal__indice a:focus-visible { color: var(--ouro-claro); }
+
+  .legal__corpo { display: grid; gap: var(--space-12); }
+  .legal__seccion {
+    display: grid;
+    gap: var(--space-3);
+    scroll-margin-top: 6rem;
+  }
+  .legal__seccion h2 {
+    font-family: var(--fonte-display);
+    font-size: var(--text-xl);
+    letter-spacing: 0.03em;
+    line-height: 1.1;
+    color: var(--ouro-claro);
+  }
+  .legal__seccion p,
+  .legal__seccion li { max-width: 68ch; }
+  .legal__seccion ul { padding-left: 1.25rem; display: grid; gap: var(--space-2); }
+
+  .legal__modelo {
+    margin: var(--space-3) 0 0;
+    padding: var(--space-4) var(--space-6);
+    border-left: 2px solid var(--ouro-vello);
+    background: color-mix(in oklab, var(--pergamino) 6%, transparent);
+    color: var(--texto-2);
+    font-size: var(--text-sm);
+  }
+  .legal__correo { color: var(--ouro-claro); }
+  .legal__legal { color: var(--texto-2); font-size: var(--text-sm); }
+</style>

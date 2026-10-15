@@ -1,0 +1,181 @@
+---
+import type { Produto } from '../data/produtos';
+import { getLangFromUrl, useTranslations, formatPrice } from '../i18n/utils';
+
+interface Props {
+  produto: Produto;
+  variante?: 'grande' | 'compacta';
+}
+
+const { produto, variante = 'compacta' } = Astro.props;
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const nome = produto.nome[lang];
+const descricion = produto.descricion[lang];
+const eyebrow = produto.eyebrow?.[lang];
+const inclue = produto.inclue?.[lang];
+---
+
+<article class:list={['produto', `produto--${variante}`]}>
+  <div class="produto__cabeza">
+  {
+    produto.imaxe ? (
+      <img class="produto__imaxe" src={produto.imaxe} alt={produto.alt[lang]} loading="lazy" decoding="async" />
+    ) : (
+      <div class="medalla" role="img" aria-label={produto.alt[lang]}>
+        {produto.insignia && <span class="medalla__cinta">{produto.insignia[lang]}</span>}
+      </div>
+    )
+  }
+    {
+      produto.destacado && (
+        <p class="produto__etiqueta">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.500A1.500 1.500 0 0 1 5.500 4H19v14H5.500A1.500 1.500 0 0 0 4 19.500v-14Z" /><path d="M4 19.500A1.500 1.500 0 0 0 5.500 21H19v-3" /></svg>
+          {t('product.featured')}
+        </p>
+      )
+    }
+  </div>
+
+  <div class="produto__corpo">
+    {eyebrow && <p class="produto__eyebrow">{eyebrow}</p>}
+    <h3 class="produto__nome">{nome}</h3>
+    {descricion && <p class="produto__descricion">{descricion}</p>}
+
+    {
+      inclue && (
+        <>
+          <h4 class="produto__incluetitulo">{t('product.includes')}</h4>
+          <ul class="produto__inclue">
+            {inclue.map((i, n) => <li class:list={{ realzado: n === produto.inclueRealzado }}>{i}</li>)}
+          </ul>
+        </>
+      )
+    }
+
+    <div class="produto__compra">
+      <p class="produto__prezo">{formatPrice(produto.prezo, lang)}</p>
+      <p class="produto__iva">{t('product.vat')}</p>
+      <button type="button" class="btn btn--comprar" data-add={produto.id} aria-label={`${t('product.add')}: ${nome}`}>
+        {t('product.buy')}
+      </button>
+    </div>
+  </div>
+</article>
+
+<style>
+  .produto {
+    --medalla: 11.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-8);
+  }
+  .produto--compacta { --medalla: 7.5rem; gap: var(--space-6); }
+  .produto__corpo { display: flex; flex-direction: column; align-items: flex-start; flex: 1; width: 100%; }
+
+  .produto__imaxe { width: var(--medalla); height: auto; filter: drop-shadow(0 8px 20px rgb(0 0 0 / 0.55)); }
+
+  /* Medallón provisional (se sustituye por la imagen de producto) */
+  .medalla {
+    position: relative;
+    flex: none;
+    width: var(--medalla);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 28%, #77735f 0%, #45433a 55%, #2a2923 100%);
+    box-shadow:
+      inset 0 0 0 calc(var(--medalla) * 0.035) #5b5748,
+      inset 0 0 0 calc(var(--medalla) * 0.045) #9a8650,
+      0 10px 24px rgb(0 0 0 / 0.6);
+  }
+  .medalla::before {
+    content: '';
+    position: absolute;
+    inset: 15%;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 38%, #4a5a49 0%, #232b24 70%, #161a16 100%);
+    box-shadow: inset 0 0 0 2px #2b2417, inset 0 4px 14px rgb(0 0 0 / 0.6);
+  }
+  .medalla__cinta {
+    position: absolute;
+    inset-inline: 0;
+    bottom: -3%;
+    margin-inline: auto;
+    width: max-content;
+    padding: 0.28em 1.2em;
+    font-family: var(--fonte-display);
+    font-size: calc(var(--medalla) * 0.075);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #2b1f12;
+    background: linear-gradient(180deg, #f2d6a6, #d9a96c);
+    border: 1px solid #815825;
+    border-radius: 0.3rem;
+    box-shadow: 0 3px 8px rgb(0 0 0 / 0.5);
+  }
+
+  .produto__cabeza { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--space-4); }
+  .produto__etiqueta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    margin-bottom: var(--space-2);
+    padding: 0.45em 1em;
+    font-size: var(--text-xs);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #2a1d10;
+    background: linear-gradient(180deg, #e6c577, #c69635);
+    border: 1px solid #815825;
+    border-radius: var(--radio);
+    box-shadow: 0 0 14px rgb(216 172 74 / 0.35);
+  }
+
+  .produto__eyebrow {
+    font-size: var(--text-xs);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ouro-claro);
+  }
+  .produto__nome {
+    margin-top: var(--space-3);
+    font-size: var(--text-xl);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    line-height: 1.05;
+    color: var(--pergamino-alto);
+  }
+  .produto--compacta .produto__nome { margin-top: 0; font-size: var(--text-lg); }
+  .produto__descricion { margin-top: var(--space-6); font-size: var(--text-sm); line-height: 1.6; }
+
+  .produto__incluetitulo {
+    margin-top: var(--space-6);
+    font-size: var(--text-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--pergamino-alto);
+  }
+  .produto__inclue { margin: var(--space-3) 0 0; padding-inline-start: 1.25rem; font-size: var(--text-sm); line-height: 1.5; }
+  .produto__inclue li::marker { color: var(--ouro-claro); }
+  .produto__inclue li.realzado { color: var(--ouro-claro); }
+  .produto__inclue li + li { margin-top: 0.15rem; }
+
+  .produto__compra {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: auto;
+    padding-top: var(--space-8);
+  }
+  .produto--compacta .produto__compra { padding-top: var(--space-4); }
+  .produto__prezo {
+    font-family: var(--fonte-display);
+    font-size: var(--text-xl);
+    line-height: 1;
+    color: var(--ouro-claro);
+  }
+  .produto--compacta .produto__prezo { font-size: var(--text-lg); }
+  .produto__iva { margin-top: 0.3rem; font-size: var(--text-xs); color: var(--ouro-vello); }
+  .produto__compra :global(.btn) { margin-top: var(--space-4); }
+</style>

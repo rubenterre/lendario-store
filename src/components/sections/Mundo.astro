@@ -1,0 +1,249 @@
+---
+import { Image } from 'astro:assets';
+import imaxe from '../../assets/ui/trailer.png';
+import fondo from '../../assets/ui/fondo_bretema.webp';
+import estrela from '../../assets/ui/star-light.svg';
+import ouros from '../../assets/images/mundo-lendario/ouros-dominio.png';
+import copas from '../../assets/images/mundo-lendario/copas-dominio.png';
+import espadas from '../../assets/images/mundo-lendario/espadas-dominio.png';
+import bastos from '../../assets/images/mundo-lendario/bastos-dominio.png';
+import selOuros from '../../assets/images/mundo-lendario/ouros-selo.png';
+import selCopas from '../../assets/images/mundo-lendario/copas-selo.png';
+import selEspadas from '../../assets/images/mundo-lendario/espadas-selo.png';
+import selBastos from '../../assets/images/mundo-lendario/bastos-selo.png';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+
+const t = useTranslations(getLangFromUrl(Astro.url));
+
+// URL del tráiler (Vimeo/YouTube). Vacía = la imagen se muestra sin enlace.
+const TRAILER_URL = 'https://vimeo.com/1227442852?fl=ip&fe=ec';
+
+const dominios = [
+  { id: 'ouros', arte: ouros, selo: selOuros },
+  { id: 'copas', arte: copas, selo: selCopas },
+  { id: 'espadas', arte: espadas, selo: selEspadas },
+  { id: 'bastos', arte: bastos, selo: selBastos },
+] as const;
+---
+
+<section class="section mundo" id="mundo" aria-labelledby="mundo-titulo">
+  <Image
+    class="mundo__fondo"
+    src={fondo}
+    alt=""
+    widths={[1100, 1650, 2200]}
+    sizes="100vw"
+    loading="lazy"
+    aria-hidden="true"
+  />
+
+  <div class="mundo__interior">
+    <div class="mundo__texto reveal">
+      <h2 id="mundo-titulo">{t('world.title')}</h2>
+      <p class="mundo__subtitulo">{t('world.subtitle')}</p>
+      <p>{t('world.text')}</p>
+    </div>
+
+    <div class="mundo__media reveal">
+      {
+        TRAILER_URL ? (
+          <a class="marco" href={TRAILER_URL} target="_blank" rel="noopener" aria-label={t('world.trailer')}>
+            <Image src={imaxe} alt="" widths={[480, 720, 1080]} sizes="(min-width: 900px) 36rem, 90vw" />
+          </a>
+        ) : (
+          <div class="marco">
+            <Image src={imaxe} alt="" widths={[480, 720, 1080]} sizes="(min-width: 900px) 36rem, 90vw" />
+          </div>
+        )
+      }
+    </div>
+  </div>
+
+  <div class="dominios">
+    <header class="dominios__cabeceira reveal">
+      <p class="eyebrow">{t('suits.eyebrow')}</p>
+      <h3 id="dominios-titulo">{t('suits.title')}</h3>
+      <p>{t('suits.text')}</p>
+    </header>
+
+    <ul class="dominios__lista reveal" aria-labelledby="dominios-titulo">
+      {
+        dominios.map((d) => (
+          <li class="dominio">
+            <Image class="dominio__arte" src={d.arte} alt="" width={288} height={511} sizes="(min-width: 900px) 18rem, 45vw" />
+            <div class="dominio__texto">
+              <Image class="dominio__estrela" src={estrela} alt="" width={20} height={21} />
+              <p class="dominio__nome">{t(`suits.${d.id}.name` as const)}</p>
+              <p class="dominio__desc">{t(`suits.${d.id}.desc` as const)}</p>
+            </div>
+            <Image class="dominio__selo" src={d.selo} alt="" width={96} height={96} densities={[1, 2]} />
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .mundo {
+    isolation: isolate;
+    overflow: hidden;
+  }
+  /* Bretema sobre el color de fondo de la página */
+  .mundo :global(.mundo__fondo) {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    pointer-events: none;
+  }
+
+  .mundo__interior {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    align-items: center;
+    gap: clamp(2rem, 6vw, 6rem);
+    width: min(100% - 2rem, 70rem);
+    margin-inline: auto;
+  }
+  .mundo__texto h2 {
+    font-size: var(--text-2xl);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    line-height: 1.05;
+  }
+  .mundo__subtitulo {
+    margin-top: var(--space-4);
+    font-family: var(--fonte-display);
+    font-size: var(--text-xl);
+    line-height: 1.2;
+  }
+  .mundo__texto p:last-child {
+    margin-top: var(--space-4);
+    color: var(--texto-2);
+    font-size: var(--text-sm);
+  }
+
+  /* La imagen ya incluye borde de ouro y esquinas redondeadas */
+  .marco { display: block; }
+  .marco :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0 12px 28px rgb(0 0 0 / 0.55));
+  }
+  a.marco:hover { filter: brightness(1.08); }
+  a.marco:focus-visible { outline: 2px solid var(--ouro-claro); outline-offset: 4px; }
+
+  /* Cuatro dominios */
+  .dominios {
+    width: min(100% - 2rem, 76rem);
+    margin: clamp(var(--space-16), 9vw, var(--space-32)) auto 0;
+  }
+  .dominios__cabeceira { text-align: center; max-width: 40rem; margin-inline: auto; }
+  .dominios__cabeceira h3 {
+    margin-top: var(--space-2);
+    font-size: var(--text-xl);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    line-height: 1.1;
+  }
+  .dominios__cabeceira p:last-child {
+    margin-top: var(--space-4);
+    color: var(--texto-2);
+    font-size: var(--text-sm);
+  }
+
+  .dominios__lista {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--space-6);
+    list-style: none;
+    margin: var(--space-12) 0 0;
+    padding: 0;
+  }
+  .dominio {
+    position: relative;
+    aspect-ratio: 288 / 511;
+    border-radius: 5.2% / 2.9%;
+    overflow: hidden;
+    box-shadow: 0 12px 32px rgb(0 0 0 / 0.5);
+    transition:
+      box-shadow 0.4s var(--ease),
+      transform 0.4s var(--ease);
+  }
+  /* Halo de ouro alrededor del borde al pasar el ratón */
+  @media (hover: hover) {
+    .dominio:hover {
+      transform: translateY(-4px);
+      box-shadow:
+        0 0 0 1px color-mix(in oklab, var(--ouro-claro) 70%, transparent),
+        0 0 18px 4px color-mix(in oklab, var(--ouro-claro) 55%, transparent),
+        0 0 48px 12px color-mix(in oklab, var(--ouro-vello) 35%, transparent),
+        0 16px 36px rgb(0 0 0 / 0.55);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .dominio { transition: box-shadow 0.4s var(--ease); }
+    .dominio:hover { transform: none; }
+  }
+  .dominio :global(.dominio__arte) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  /* Filete de bronce y velo inferior para que el texto se lea */
+  .dominio::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 1px solid #815825;
+    border-radius: inherit;
+    background: linear-gradient(to top, rgb(0 0 0 / 0.7) 0%, transparent 38%);
+    pointer-events: none;
+  }
+  .dominio__texto {
+    position: absolute;
+    z-index: 1;
+    inset-inline-start: 8%;
+    bottom: 6%;
+    width: 52%;
+  }
+  .dominio__texto :global(.dominio__estrela) { width: 1.1rem; height: auto; margin-bottom: var(--space-2); }
+  .dominio__nome {
+    font-size: var(--text-sm);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ouro-claro);
+  }
+  .dominio__desc {
+    margin-top: 0.15rem;
+    font-family: var(--fonte-texto);
+    font-size: var(--text-sm);
+    line-height: 1.2;
+    color: var(--pergamino);
+    text-wrap: balance;
+  }
+  .dominio :global(.dominio__selo) {
+    position: absolute;
+    z-index: 1;
+    inset-inline-end: 9.4%;
+    bottom: 1.2%;
+    width: 31.6%;
+    height: auto;
+  }
+
+  @media (max-width: 900px) {
+    .dominios__lista { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 860px) {
+    .mundo__interior { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 480px) {
+    .dominios__lista { grid-template-columns: minmax(0, 1fr); max-width: 20rem; margin-inline: auto; }
+  }
+</style>

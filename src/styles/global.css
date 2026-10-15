@@ -1,0 +1,177 @@
+/* ── Lendario · sistema de diseño ─────────────────────────── */
+/* @import url('https://api.fontshare.com/v2/css?f[]=zodiak@400,700&f[]=satoshi@400,500,700&display=swap');
+ */
+
+@font-face {
+  font-family: 'Alice';
+  src: url('/fonts/Alice-Regular.ttf') format('truetype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Martego';
+  src: url('/fonts/Martego-Regular.woff2') format('woff2');
+  font-display: swap;
+}
+
+:root {
+  /* Paleta */
+  --pergamino:      #efe4cf;
+  --pergamino-alto: #f8f1e2;
+  --granito:        #5b5f5c;
+  --granito-escuro: #3a3d3b;
+  --ouro-vello:     #b0873c;
+  --ouro-claro:     #F1B844;
+  --musgo:          #56684a;
+  --tinta:          #17150f;
+  --tinta-suave:    #211e17;
+
+  --bg:      var(--tinta);
+  --texto:   var(--pergamino);
+  --texto-2: color-mix(in oklab, var(--pergamino) 62%, var(--granito));
+  --borde:   color-mix(in oklab, var(--pergamino) 18%, transparent);
+
+  /* Tipografía */
+  --fonte-display: 'Martego', serif;
+  --fonte-texto:   'Alice', ui-sans-serif, system-ui, sans-serif;
+
+  --text-xs:   clamp(0.75rem, 0.72rem + 0.15vw, 0.82rem);
+  --text-sm:   clamp(0.875rem, 0.85rem + 0.15vw, 0.95rem);
+  --text-base: clamp(1rem, 0.97rem + 0.2vw, 1.08rem);
+  --text-lg:   clamp(1.15rem, 1.05rem + 0.5vw, 1.4rem);
+  --text-xl:   clamp(1.6rem, 1.3rem + 1.4vw, 2.25rem);
+  --text-2xl:  clamp(2.2rem, 1.6rem + 2.8vw, 3.5rem);
+  --text-hero: clamp(3.2rem, 2rem + 7vw, 7.5rem);
+
+  /* Espaciado */
+  --space-2: 0.5rem;  --space-3: 0.75rem; --space-4: 1rem;
+  --space-6: 1.5rem;  --space-8: 2rem;    --space-12: 3rem;
+  --space-16: 4rem;   --space-24: 6rem;   --space-32: 8rem;
+
+  --ancho: 1180px;
+  --radio: 4px;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--texto);
+  font-family: var(--fonte-texto);
+  font-size: var(--text-base);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Grano de pergamino sobre toda a páxina */
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  pointer-events: none; z-index: 100;
+  opacity: 0.35; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+}
+
+h1, h2, h3 {
+  font-family: var(--fonte-display);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  margin: 0;
+}
+
+p { margin: 0; }
+img { max-width: 100%; display: block; }
+a { color: inherit; }
+
+.container {
+  width: 100%;
+  max-width: var(--ancho);
+  margin-inline: auto;
+  padding-inline: clamp(var(--space-4), 5vw, var(--space-12));
+}
+
+.section {
+  padding-block: clamp(var(--space-16), 9vw, var(--space-32));
+  position: relative;
+}
+
+.eyebrow {
+  font-size: var(--text-xs);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--ouro-claro);
+  font-weight: 500;
+  margin-bottom: var(--space-4);
+}
+
+.lead { color: var(--texto-2); max-width: 62ch; }
+
+/* Botóns */
+.btn {
+  display: inline-flex; align-items: center; gap: 0.6em;
+  font-family: var(--fonte-texto);
+  font-size: var(--text-sm); font-weight: 500;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  padding: 0.95em 1.9em;
+  border-radius: var(--radio);
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.3s var(--ease), background-color 0.3s var(--ease), border-color 0.3s var(--ease), color 0.3s var(--ease);
+}
+.btn:hover { transform: translateY(-2px); }
+.btn:focus-visible { outline: 2px solid var(--ouro-claro); outline-offset: 3px; }
+
+.btn--primario {
+  background: linear-gradient(180deg, var(--ouro-claro), var(--ouro-vello));
+  color: var(--tinta);
+  border: 1px solid var(--ouro-claro);
+  box-shadow: 0 10px 30px -12px rgba(176, 135, 60, 0.65);
+}
+.btn--primario:hover { background: var(--ouro-claro); }
+
+.btn--fantasma {
+  background: transparent;
+  color: var(--texto);
+  border: 1px solid var(--borde);
+}
+.btn--fantasma:hover { border-color: var(--ouro-claro); color: var(--ouro-claro); }
+
+/* Aparición ao facer scroll */
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.9s var(--ease), transform 0.9s var(--ease); }
+.reveal.is-visible { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; } }
+
+
+/* Botón COMPRAR: pergamino con filete de bronce y halo de ouro */
+.btn--comprar {
+  color: #2a1d10;
+  background:
+    radial-gradient(120% 140% at 30% 15%, rgb(255 255 255 / 0.3), transparent 55%),
+    linear-gradient(180deg, #d9bf94 0%, #b9996d 55%, #9a7a50 100%);
+  border: 1px solid #815825;
+  box-shadow:
+    inset 0 0 0 1px rgb(255 240 205 / 0.35),
+    inset 0 -3px 6px rgb(60 38 14 / 0.35),
+    0 0 14px 2px rgb(216 172 74 / 0.45),
+    0 4px 10px rgb(0 0 0 / 0.5);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.btn--comprar:hover {
+  background:
+    radial-gradient(120% 140% at 30% 15%, rgb(255 255 255 / 0.4), transparent 55%),
+    linear-gradient(180deg, #e4cca4 0%, #c4a478 55%, #a58459 100%);
+  box-shadow:
+    inset 0 0 0 1px rgb(255 240 205 / 0.45),
+    inset 0 -3px 6px rgb(60 38 14 / 0.3),
+    0 0 22px 5px rgb(216 172 74 / 0.6),
+    0 4px 10px rgb(0 0 0 / 0.5);
+}
