@@ -1,0 +1,57 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import { getLangFromUrl, useTranslations, localizedPath } from '../../i18n/utils';
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+}
+const { post } = Astro.props;
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const fecha = new Intl.DateTimeFormat(lang === 'es' ? 'es-ES' : 'gl-ES', { day: 'numeric', month: 'short', year: 'numeric' }).format(post.data.pubDate);
+---
+
+<li class="tarxeta">
+  <a class="tarxeta__ligazon" href={localizedPath(lang, `/blog/${post.id}/`)} hreflang="gl">
+    <div class="tarxeta__imx">
+      {post.data.heroImage && (
+        <Image src={post.data.heroImage} alt={post.data.heroAlt ?? ''} widths={[360, 720]} sizes="(min-width: 60rem) 22rem, 90vw" loading="lazy" />
+      )}
+    </div>
+    <div class="tarxeta__corpo">
+      <h3 lang="gl">{post.data.title}</h3>
+      <p class="tarxeta__pe">
+        <time datetime={post.data.pubDate.toISOString()}>{fecha}</time>
+        <span class="tarxeta__mais">{t('news.more')} <span aria-hidden="true">→</span></span>
+      </p>
+    </div>
+  </a>
+</li>
+
+<style>
+  .tarxeta {
+    display: grid;
+    background: linear-gradient(to bottom, rgb(255 255 255 / 0.04), rgb(0 0 0 / 0.25));
+    border: 1px solid var(--borde);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.25s var(--ease), border-color 0.25s var(--ease);
+  }
+  .tarxeta:hover, .tarxeta:focus-within { transform: translateY(-4px); border-color: var(--ouro-vello); }
+  .tarxeta__ligazon { display: grid; grid-template-rows: auto 1fr; color: inherit; text-decoration: none; }
+  .tarxeta__imx { aspect-ratio: 16 / 10; overflow: hidden; background: var(--tinta); }
+  .tarxeta__imx :global(img) { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .tarxeta__corpo { display: grid; align-content: space-between; gap: var(--space-4); padding: var(--space-5, 1.25rem); }
+  .tarxeta h3 {
+    margin: 0;
+    font-family: var(--fonte-display);
+    font-size: var(--text-lg);
+    font-weight: 400;
+    line-height: 1.25;
+    color: var(--ouro-claro);
+  }
+  .tarxeta__pe { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-3); margin: 0; font-size: var(--text-xs); color: var(--texto-2); }
+  .tarxeta__mais { color: var(--ouro-claro); text-decoration: underline; text-underline-offset: 3px; }
+  @media (prefers-reduced-motion: reduce) { .tarxeta { transition: none; } .tarxeta:hover { transform: none; } }
+</style>

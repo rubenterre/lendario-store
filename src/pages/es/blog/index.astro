@@ -1,0 +1,11 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import BlogIndex from '../../../components/blog/BlogIndex.astro';
+import { getLangFromUrl, useTranslations } from '../../../i18n/utils';
+
+const t = useTranslations(getLangFromUrl(Astro.url));
+---
+
+<Layout title={t('blog.title')} description={t('blog.description')}>
+  <BlogIndex />
+</Layout>

@@ -1,0 +1,61 @@
+---
+import { Image } from 'astro:assets';
+import { render, type CollectionEntry } from 'astro:content';
+import { getLangFromUrl, useTranslations, localizedPath } from '../../i18n/utils';
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+}
+const { post } = Astro.props;
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const { Content } = await render(post);
+const fmt = (d: Date) => new Intl.DateTimeFormat(lang === 'es' ? 'es-ES' : 'gl-ES', { day: 'numeric', month: 'long', year: 'numeric' }).format(d);
+const volver = localizedPath(lang, '/blog/');
+---
+
+<article class="entrada section">
+  <header class="entrada__cab">
+    <a class="entrada__volver" href={volver}>← {t('blog.back')}</a>
+    {post.data.tags.length > 0 && (
+      <ul class="entrada__tags">{post.data.tags.map((tag) => <li>{tag}</li>)}</ul>
+    )}
+    <h1 lang="gl">{post.data.title}</h1>
+    <p class="entrada__meta">
+      <time datetime={post.data.pubDate.toISOString()}>{fmt(post.data.pubDate)}</time>
+      {post.data.updatedDate && <span> · {t('blog.updated')} {fmt(post.data.updatedDate)}</span>}
+    </p>
+    {t('blog.langNote') && <p class="entrada__meta">{t('blog.langNote')}</p>}
+  </header>
+
+  {post.data.heroImage && (
+    <div class="entrada__hero">
+      <Image src={post.data.heroImage} alt={post.data.heroAlt ?? ''} widths={[640, 960, 1280]} sizes="(min-width: 60rem) 48rem, 100vw" loading="eager" />
+    </div>
+  )}
+
+  <div class="entrada__texto" lang="gl"><Content /></div>
+
+  <footer class="entrada__pe"><a class="entrada__volver" href={volver}>← {t('blog.back')}</a></footer>
+</article>
+
+<style>
+  .entrada { width: min(100% - 2rem, 44rem); margin-inline: auto; }
+  .entrada__volver { color: var(--ouro-claro); font-size: var(--text-sm); text-underline-offset: 3px; }
+  .entrada__tags { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: var(--space-5, 1.25rem) 0 0; padding: 0; list-style: none; }
+  .entrada__tags li { padding: 0.15rem 0.7rem; border: 1px solid var(--ouro-vello); border-radius: 999px; font-size: var(--text-xs); color: var(--texto-2); }
+  .entrada__cab h1 { margin: var(--space-4) 0 var(--space-3); font-size: var(--text-2xl); line-height: 1.1; }
+  .entrada__meta { margin: 0; font-size: var(--text-sm); color: var(--texto-2); }
+  .entrada__hero { margin-block: var(--space-8); border: 1px solid var(--borde); border-radius: 10px; overflow: hidden; }
+  .entrada__hero :global(img) { width: 100%; height: auto; display: block; }
+  .entrada__texto { line-height: 1.75; }
+  .entrada__texto :global(h2), .entrada__texto :global(h3) { margin: var(--space-8) 0 var(--space-3); font-family: var(--fonte-display); font-weight: 400; color: var(--ouro-claro); line-height: 1.2; }
+  .entrada__texto :global(h2) { font-size: var(--text-xl); }
+  .entrada__texto :global(h3) { font-size: var(--text-lg); }
+  .entrada__texto :global(p), .entrada__texto :global(ul), .entrada__texto :global(ol) { margin: 0 0 var(--space-4); }
+  .entrada__texto :global(ul), .entrada__texto :global(ol) { padding-inline-start: 1.25rem; }
+  .entrada__texto :global(a) { color: var(--ouro-claro); text-underline-offset: 3px; }
+  .entrada__texto :global(blockquote) { margin: var(--space-6) 0; padding-inline-start: var(--space-4); border-inline-start: 2px solid var(--ouro-vello); color: var(--texto-2); }
+  .entrada__texto :global(img) { max-width: 100%; height: auto; border-radius: 8px; }
+  .entrada__pe { margin-top: var(--space-10, 2.5rem); padding-top: var(--space-5, 1.25rem); border-top: 1px solid var(--borde); }
+</style>

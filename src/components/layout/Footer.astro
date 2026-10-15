@@ -1,42 +1,102 @@
 ---
+import { Image } from 'astro:assets';
+import logo from '../../assets/lendario_logo_dark_tagline_848px.webp';
 import { getLangFromUrl, useTranslations, localizedPath } from '../../i18n/utils';
+import { tenda } from '../../data/tenda';
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
+const home = localizedPath(lang, '/');
 const ano = new Date().getFullYear();
+const contacto = tenda.email ? `mailto:${tenda.email}` : null;
+
+const mapa = [
+  { href: home, label: t('footer.home') },
+  { href: `${home}#mundo`, label: t('nav.world') },
+  { href: `${home}#baralla`, label: t('nav.deck') },
+  { href: `${home}#edicions`, label: t('footer.editionsTitle') },
+  { href: `${home}#novas`, label: t('nav.news') },
+  ...(contacto ? [{ href: contacto, label: t('footer.contact') }] : []),
+];
+const utiles = [
+  { href: localizedPath(lang, '/aviso-legal'), label: t('footer.legalNotice') },
+  { href: localizedPath(lang, '/privacidade'), label: t('footer.privacy') },
+  { href: localizedPath(lang, '/politicas'), label: t('footer.terms') },
+  { href: localizedPath(lang, '/creditos'), label: t('footer.credits') },
+];
 ---
 
 <footer class="pe">
   <div class="container pe__interior">
-    <p class="pe__marca">Lendario</p>
-    <p class="pe__texto">{t('footer.tagline')}</p>
-    <nav class="pe__nav" aria-label={t('footer.legal')}>
-      <a href={localizedPath(lang, '/politicas')}>{t('footer.policies')}</a>
-      <a href={localizedPath(lang, '/privacidade')}>{t('footer.privacy')}</a>
+    <div class="pe__marca">
+      <a href={home} aria-label={t('a11y.home')}>
+        <Image src={logo} alt="Logo de Lendario" height={120} widths={[120, 240]} sizes="120px" loading="lazy" />
+      </a>
+      <p class="pe__texto">{t('footer.tagline')}</p>
+      {tenda.instagram && (
+        <p class="pe__texto">
+          {t('footer.follow')}{' '}
+          <a href={`https://www.instagram.com/${tenda.instagram}/`} rel="noopener" target="_blank">@{tenda.instagram}</a>
+        </p>
+      )}
+    </div>
+
+    <nav class="pe__col" aria-labelledby="pe-mapa">
+      <h2 id="pe-mapa">{t('footer.map')}</h2>
+      <ul>{mapa.map((e) => <li><a href={e.href}>{e.label}</a></li>)}</ul>
     </nav>
-    <p class="pe__legal">© {ano} Lendario. {t('footer.rights')}</p>
+
+    <nav class="pe__col" aria-labelledby="pe-links">
+      <h2 id="pe-links">{t('footer.links')}</h2>
+      <ul>{utiles.map((e) => <li><a href={e.href}>{e.label}</a></li>)}</ul>
+    </nav>
+
+    <div class="pe__col pe__col--edicions">
+      <h2>{t('footer.editionsTitle')}</h2>
+      <p>{t('footer.editionsText')}</p>
+      <a class="btn btn--comprar" href={`${home}#edicions`}>{t('header.buy')}</a>
+    </div>
   </div>
+
+  <p class="pe__legal">© {ano} {tenda.autor}. {t('footer.rights')}</p>
 </footer>
 
 <style>
   .pe {
-    border-top: 1px solid var(--borde);
-    padding-block: var(--space-12);
+    border-top: 2px solid var(--ouro-vello);
+    padding-block: var(--space-12) var(--space-6);
     margin-top: var(--space-16);
+    background: linear-gradient(to bottom, transparent, rgb(0 0 0 / 0.35));
+    backdrop-filter: blur(10px);
+    border-image: linear-gradient(100deg, #5d442300, var(--ouro-claro), #5d442300) 1;
   }
   .pe__interior {
     display: grid;
-    gap: var(--space-3);
-    text-align: center;
+    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+    gap: var(--space-10, 2.5rem) var(--space-8);
+    align-items: start;
   }
-  .pe__marca {
+  .pe__marca { display: grid; gap: var(--space-3); justify-items: start; }
+  .pe__marca :global(img) { width: auto; height: 6rem; }
+  .pe__texto { margin: 0; font-size: var(--text-sm); color: var(--texto-2); max-width: 28ch; }
+  .pe__texto a { color: var(--ouro-claro); text-underline-offset: 3px; }
+
+  .pe__col h2 {
+    display: inline-block;
+    margin: 0 0 var(--space-4);
+    padding-bottom: var(--space-2);
+    border-bottom: 1px solid var(--ouro-vello);
+    border-image: linear-gradient(100deg, #5d442300, var(--ouro-claro), #5d442300) 1;
     font-family: var(--fonte-display);
     font-size: var(--text-lg);
-    letter-spacing: 0.04em;
+    font-weight: 400;
   }
-  .pe__texto { color: var(--texto-2); }
-  .pe__nav { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-2) var(--space-6); }
-  .pe__nav a { color: var(--texto-2); text-decoration: underline; text-underline-offset: 3px; }
-  .pe__nav a:hover, .pe__nav a:focus-visible { color: var(--ouro-claro); }
-  .pe__legal { color: var(--texto-2); font-size: var(--text-xs); }
+  .pe__col ul { display: grid; gap: var(--space-2); margin: 0; padding: 0; list-style: none; }
+  .pe__col a:not(.btn) { color: var(--texto-2); font-size: var(--text-sm); text-decoration: none; }
+  .pe__col a:not(.btn):hover, .pe__col a:not(.btn):focus-visible { color: var(--ouro-claro); text-decoration: underline; text-underline-offset: 3px; }
+  .pe__col--edicions { display: grid; gap: var(--space-3); justify-items: start; }
+  .pe__col--edicions h2 { margin-bottom: 0.25rem; }
+  .pe__col--edicions p { margin: 0; font-size: var(--text-sm); color: var(--texto-2); }
+
+  .pe__legal { margin: var(--space-10, 2.5rem) 0 0; text-align: center; font-size: var(--text-xs); color: var(--texto-2); }
 </style>

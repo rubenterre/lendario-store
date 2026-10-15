@@ -1,0 +1,41 @@
+---
+import { getCollection } from 'astro:content';
+import PostCard from '../blog/PostCard.astro';
+import { getLangFromUrl, useTranslations, localizedPath } from '../../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const ultimas = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 3);
+---
+
+<section class="section novas" id="novas" aria-labelledby="novas-titulo">
+  <header class="cabeceira reveal">
+    <p class="eyebrow">{t('news.eyebrow')}</p>
+    <h2 id="novas-titulo">{t('news.title')}</h2>
+  </header>
+
+  <ul class="zona grade reveal">
+    {ultimas.map((post) => <PostCard post={post} />)}
+  </ul>
+
+  <p class="ver-blog">
+    <a class="btn btn--fantasma" href={localizedPath(lang, '/blog/')}>{t('news.viewBlog')}</a>
+  </p>
+</section>
+
+<style>
+  .zona { width: min(100% - 2rem, 66rem); margin-inline: auto; }
+  .cabeceira { text-align: center; }
+  .cabeceira h2 { margin-top: var(--space-2); font-size: var(--text-2xl); text-transform: uppercase; letter-spacing: 0.04em; line-height: 1.05; }
+  .grade {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: clamp(1.25rem, 3vw, 2rem);
+    margin-top: var(--space-12);
+    padding: 0;
+    list-style: none;
+  }
+  .ver-blog { margin: var(--space-10, 2.5rem) 0 0; text-align: center; }
+</style>

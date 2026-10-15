@@ -1,0 +1,12 @@
+---
+import Layout from '../layouts/Layout.astro';
+import DocumentoLegal from '../components/sections/DocumentoLegal.astro';
+import { creditos } from '../data/creditos';
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+
+const t = useTranslations(getLangFromUrl(Astro.url));
+---
+
+<Layout title={t('credits.title')} description={t('credits.description')}>
+  <DocumentoLegal doc={creditos} />
+</Layout>
