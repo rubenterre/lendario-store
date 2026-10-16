@@ -30,6 +30,8 @@ export async function handleNewsletter(request: Request, env: NewsletterEnv): Pr
   }
 
   const origenPeticion = new URL(request.url).origin;
+  // Solo en local devolvemos el detalle del error de Brevo (nunca en producción).
+  const local = ['localhost', '127.0.0.1'].includes(new URL(request.url).hostname);
   const base = new URL(env.SITE_URL || origenPeticion).origin;
   const origen = request.headers.get('Origin');
   if (origen && origen !== base && origen !== origenPeticion) return json({ error: 'forbidden' }, 403);
@@ -68,8 +70,9 @@ export async function handleNewsletter(request: Request, env: NewsletterEnv): Pr
       body: JSON.stringify(cuerpo),
       signal: AbortSignal.timeout(8000),
     });
-  } catch {
-    return json({ error: 'upstream_error' }, 502);
+  } catch (e) {
+    console.error('Brevo DOI fetch falló:', e instanceof Error ? e.message : e);
+    return json({ error: 'upstream_error', ...(local ? { detail: `fetch: ${e instanceof Error ? e.message : e}` } : {}) }, 502);
   }
 
   if (r.ok) return json({ ok: true });
@@ -78,6 +81,6 @@ export async function handleNewsletter(request: Request, env: NewsletterEnv): Pr
   const detalle: any = await r.json().catch(() => ({}));
   if (r.status === 400 && detalle?.code === 'duplicate_parameter') return json({ ok: true });
 
-  console.error('Brevo DOI error', r.status, detalle?.code ?? '');
-  return json({ error: 'upstream_error' }, 502);
+  console.error('Brevo DOI error', r.status, detalle?.code ?? '', detalle?.message ?? '');
+  return json({ error: 'upstream_error', ...(local ? { detail: `${r.status} ${detalle?.code ?? ''} ${detalle?.message ?? ''}`.trim() } : {}) }, 502);
 }

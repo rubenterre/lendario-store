@@ -88,7 +88,8 @@ const beneficios = [t('newsletter.b1'), t('newsletter.b2'), t('newsletter.b3')];
           form.reset();
           mostrar(d.msgOk!, 'ok');
         } else {
-          const { error } = await r.json().catch(() => ({ error: '' }));
+          const { error, detail } = await r.json().catch(() => ({ error: '', detail: '' }));
+          if (detail && location.hostname === 'localhost') console.error('Newsletter:', detail);
           mostrar(error === 'invalid_email' ? d.msgEmail! : error === 'consent_required' ? d.msgConsent! : d.msgError!, 'error');
         }
       } catch {
