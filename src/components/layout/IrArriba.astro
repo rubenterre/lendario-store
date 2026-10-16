@@ -1,0 +1,90 @@
+---
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+
+<button class="ir-arriba" type="button" aria-label={t('a11y.top')} hidden data-ir-arriba>
+  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M12 19V5M5 12l7-7 7 7" />
+  </svg>
+</button>
+
+<style>
+  .ir-arriba {
+    position: fixed;
+    right: max(var(--space-4), env(safe-area-inset-right));
+    bottom: max(var(--space-4), env(safe-area-inset-bottom));
+    z-index: 60;
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    padding: 0;
+    border: 1px solid var(--ouro-vello);
+    border-radius: 50%;
+    background: color-mix(in oklab, var(--tinta) 88%, transparent);
+    color: var(--ouro-claro);
+    cursor: pointer;
+    backdrop-filter: blur(6px);
+    opacity: 0;
+    transform: translateY(0.5rem);
+    visibility: hidden;
+    transition:
+      opacity 0.3s var(--ease),
+      transform 0.3s var(--ease),
+      visibility 0.3s,
+      background-color 0.2s,
+      color 0.2s;
+  }
+
+  .ir-arriba[hidden] { display: none; }
+
+  .ir-arriba.is-visible {
+    opacity: 1;
+    transform: none;
+    visibility: visible;
+  }
+
+  .ir-arriba:hover {
+    background: var(--ouro-claro);
+    color: var(--tinta);
+  }
+
+  .ir-arriba:focus-visible {
+    outline: 2px solid var(--ouro-claro);
+    outline-offset: 3px;
+  }
+</style>
+
+<script>
+  const boton = document.querySelector<HTMLButtonElement>('[data-ir-arriba]');
+
+  if (boton) {
+    const UMBRAL = 600;
+    boton.hidden = false;
+
+    let pendente = false;
+    const actualizar = () => {
+      pendente = false;
+      boton.classList.toggle('is-visible', window.scrollY > UMBRAL);
+    };
+
+    window.addEventListener(
+      'scroll',
+      () => {
+        if (!pendente) {
+          pendente = true;
+          requestAnimationFrame(actualizar);
+        }
+      },
+      { passive: true }
+    );
+
+    // Sin "behavior": usa el scroll-behavior del CSS, que ya respeta prefers-reduced-motion.
+    boton.addEventListener('click', () => window.scrollTo({ top: 0 }));
+
+    actualizar();
+  }
+</script>

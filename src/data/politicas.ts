@@ -45,7 +45,7 @@ export const politicas: Record<Lang, Politicas> = {
         titulo: 'Envíos',
         p: [
           'Os envíos fanse a través de transportista á dirección que indiques ao pagar. Actualmente enviamos a España.',
-          'O envío é gratuíto nos pedidos de 19,90 € ou máis. Nos pedidos de menor importe, o envío custa 5,95 € (IVE incluído). O importe aparece antes de confirmar o pagamento.',
+          'O envío é gratuíto nos pedidos de 19,90 € ou máis. Nos pedidos de menor importe, o envío custa 2,50 € (IVE incluído). O importe aparece antes de confirmar o pagamento.',
           'Preparamos o pedido unha vez confirmado o pagamento. Se non acordamos outra data contigo, entregarémolo como máximo en 30 días naturais desde o día seguinte á compra.',
           'Se o pedido tarda máis do previsto ou ten algún problema de transporte, escríbenos e axudarémosche a resolvelo.',
         ],
@@ -110,7 +110,7 @@ export const politicas: Record<Lang, Politicas> = {
         titulo: 'Envíos',
         p: [
           'Los envíos se hacen mediante transportista a la dirección que indiques al pagar. Actualmente enviamos a España.',
-          'El envío es gratuito en los pedidos de 19,90 € o más. En los pedidos de menor importe, el envío cuesta 5,95 € (IVA incluido). El importe aparece antes de confirmar el pago.',
+          'El envío es gratuito en los pedidos de 19,90 € o más. En los pedidos de menor importe, el envío cuesta 2,50 € (IVA incluido). El importe aparece antes de confirmar el pago.',
           'Preparamos el pedido una vez confirmado el pago. Si no acordamos otra fecha contigo, lo entregaremos como máximo en 30 días naturales desde el día siguiente a la compra.',
           'Si el pedido tarda más de lo previsto o tiene algún problema de transporte, escríbenos y te ayudaremos a resolverlo.',
         ],

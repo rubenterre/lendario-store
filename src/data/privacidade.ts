@@ -81,6 +81,7 @@ export const privacidade: Record<Lang, Politicas> = {
         p: [
           'Esta web non usa cookies de analítica nin de publicidade. Para lembrar o contido do carro, usa o almacenamento local do teu navegador, un recurso técnico necesario que se baleira ao completar a compra.',
           'A páxina de pagamento pertence a Stripe, que pode usar as súas propias cookies de seguridade e funcionamento. Se hai ligazóns a plataformas externas, como a dun tráiler, a súa política aplícase unha vez que sales de Lendario.',
+          'Algunhas entradas do blog, como as do prototipo e do flipbook, incorporan contido de terceiros (Vimeo e o servizo do flipbook), que pode usar cookies ou outras tecnoloxías propias ao cargarse. Estes servizos non se usan na tenda nin no proceso de compra.',
         ],
       },
       {
@@ -180,6 +181,7 @@ export const privacidade: Record<Lang, Politicas> = {
         p: [
           'Esta web no usa cookies de analítica ni de publicidad. Para recordar el contenido del carrito, usa el almacenamiento local de tu navegador, un recurso técnico necesario que se vacía al completar la compra.',
           'La página de pago pertenece a Stripe, que puede usar sus propias cookies de seguridad y funcionamiento. Si hay enlaces a plataformas externas, como el de un tráiler, su política se aplica una vez que sales de Lendario.',
+          'Algunas entradas del blog, como las del prototipo y del flipbook, incorporan contenido de terceros (Vimeo y el servicio del flipbook), que puede usar cookies u otras tecnologías propias al cargarse. Estos servicios no se usan en la tienda ni en el proceso de compra.',
         ],
       },
       {
