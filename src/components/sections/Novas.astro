@@ -13,7 +13,7 @@ const ultimas = (await getCollection('blog', ({ data }) => !data.draft))
 ---
 
 <section class="section novas" id="novas" aria-labelledby="novas-titulo">
-  <Image class="novas__fondo" src={fondo} alt="" widths={[1100, 1650, 2200]} sizes="100vw" loading="lazy" aria-hidden="true" />
+  <Image class="novas__fondo" src={fondo} alt="Fondo de bosque lendario" widths={[1100, 1650, 2200]} sizes="100vw" loading="lazy" aria-hidden="true" />
 
   <header class="cabeceira reveal">
     <p class="eyebrow">{t('news.eyebrow')}</p>

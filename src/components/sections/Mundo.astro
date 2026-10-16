@@ -30,7 +30,7 @@ const dominios = [
   <Image
     class="mundo__fondo"
     src={fondo}
-    alt=""
+    alt="Fondo de néboa"
     widths={[1100, 1650, 2200]}
     sizes="100vw"
     loading="lazy"
@@ -48,11 +48,11 @@ const dominios = [
       {
         TRAILER_URL ? (
           <a class="marco" href={TRAILER_URL} target="_blank" rel="noopener" aria-label={t('world.trailer')}>
-            <Image src={imaxe} alt="" widths={[480, 720, 1080]} sizes="(min-width: 900px) 36rem, 90vw" />
+            <Image src={imaxe} alt="Trailer" widths={[480, 720, 1080]} sizes="(min-width: 900px) 36rem, 90vw" />
           </a>
         ) : (
           <div class="marco">
-            <Image src={imaxe} alt="" widths={[480, 720, 1080]} sizes="(min-width: 900px) 36rem, 90vw" />
+            <Image src={imaxe} alt="Trailer" widths={[480, 720, 1080]} sizes="(min-width: 900px) 36rem, 90vw" />
           </div>
         )
       }
