@@ -2,7 +2,7 @@
 title: "Da pantalla á imprenta: xa enviamos o primeiro prototipo de Lendario"
 description: "Lendario deu un paso decisivo: o primeiro prototipo impreso xa está en produción. Contamos que significa este paso e que faremos en canto o teñamos nas mans."
 pubDate: 2026-08-30
-heroImage: "../../assets/blog/primeira-tirada-prototipo.png"
+heroImage: "../../assets/blog/primeira-tirada-prototipo.jpg"
 heroAlt: "Arquivos de deseño das cartas de Lendario preparados para envío a imprenta"
 tags: ["Novidades", "Proceso creativo"]
 draft: false

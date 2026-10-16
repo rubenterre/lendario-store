@@ -43,12 +43,25 @@ export const privacidade: Record<Lang, Politicas> = {
         ],
       },
       {
+        id: 'boletin',
+        titulo: 'Boletín',
+        p: [
+          'Se te subscribes ao boletín, tratamos o teu correo electrónico para enviarche novidades sobre Lendario, como o lanzamento da baralla, adiantos das cartas e contido do blog. Base xurídica: o teu consentimento (art. 6.1.a RGPD), que podes retirar en calquera momento.',
+        ],
+        ul: [
+          'Usamos dobre confirmación: só te engadimos á lista cando confirmas o teu correo coa ligazón da mensaxe que che enviamos.',
+          'Cada envío incluí unha ligazón para darte de baixa.',
+          'Conservamos o teu correo mentres sigas subscrito ou subscrita; se te das de baixa, deixamos de enviarche comunicacións.',
+        ],
+      },
+      {
         id: 'destinatarios',
         titulo: 'Con quen os compartimos',
         ul: [
           'Stripe, para procesar o pagamento e detectar fraude. Stripe pode tratar certos datos como responsable propio; a súa política está en stripe.com/es/privacy.',
           'A empresa de transporte, que recibe o teu nome, enderezo e teléfono para entregar o pedido.',
           'Netlify, que aloxa a web e executa o proceso de pago.',
+          'Brevo (Francia), que xestiona a lista do boletín e o envío dos correos, se te subscribes.',
           'A xestoría ou asesoría fiscal que nos axude coa contabilidade, e as administracións públicas cando a lei o esixa.',
         ],
         p2: [
@@ -129,12 +142,25 @@ export const privacidade: Record<Lang, Politicas> = {
         ],
       },
       {
+        id: 'boletin',
+        titulo: 'Boletín',
+        p: [
+          'Si te suscribes al boletín, tratamos tu correo electrónico para enviarte novedades sobre Lendario, como el lanzamiento de la baraja, adelantos de las cartas y contenido del blog. Base jurídica: tu consentimiento (art. 6.1.a RGPD), que puedes retirar en cualquier momento.',
+        ],
+        ul: [
+          'Usamos doble confirmación: solo te añadimos a la lista cuando confirmas tu correo con el enlace del mensaje que te enviamos.',
+          'Cada envío incluye un enlace para darte de baja.',
+          'Conservamos tu correo mientras sigas suscrito o suscrita; si te das de baja, dejamos de enviarte comunicaciones.',
+        ],
+      },
+      {
         id: 'destinatarios',
         titulo: 'Con quién los compartimos',
         ul: [
           'Stripe, para procesar el pago y detectar fraude. Stripe puede tratar ciertos datos como responsable propio; su política está en stripe.com/es/privacy.',
           'La empresa de transporte, que recibe tu nombre, dirección y teléfono para entregar el pedido.',
           'Netlify, que aloja la web y ejecuta el proceso de pago.',
+          'Brevo (Francia), que gestiona la lista del boletín y el envío de los correos, si te suscribes.',
           'La gestoría o asesoría fiscal que nos ayude con la contabilidad, y las administraciones públicas cuando la ley lo exija.',
         ],
         p2: [

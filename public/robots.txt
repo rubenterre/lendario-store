@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://lendario.gal/sitemap-index.xml
+Sitemap: https://lendario.gal/sitemap.xml

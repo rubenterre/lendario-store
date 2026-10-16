@@ -1,0 +1,11 @@
+---
+import Layout from '../layouts/Layout.astro';
+import BoletinConfirmado from '../components/sections/BoletinConfirmado.astro';
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+
+const t = useTranslations(getLangFromUrl(Astro.url));
+---
+
+<Layout title={t('newsletter.confirmedTitle')} noindex>
+  <BoletinConfirmado />
+</Layout>

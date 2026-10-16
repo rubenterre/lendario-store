@@ -1,0 +1,52 @@
+---
+import { Image } from 'astro:assets';
+import fondo from '../../assets/ui/fondo_baralla.webp';
+import { getLangFromUrl, useTranslations, localizedPath } from '../../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const tEs = useTranslations('es');
+---
+
+<section class="section nf" aria-labelledby="nf-titulo">
+  <Image class="nf__fondo" src={fondo} alt="" widths={[1100, 1650, 2200]} sizes="100vw" loading="eager" aria-hidden="true" />
+  <div class="nf__caixa">
+    <p class="eyebrow">404</p>
+    <h1 id="nf-titulo">{t('notFound.title')}</h1>
+    <p class="lead">{t('notFound.text')}</p>
+    <a class="btn btn--primario" href={localizedPath('gl', '/')}>{t('notFound.back')}</a>
+
+    <p class="nf__es" lang="es">
+      {tEs('notFound.title')}. <a href={localizedPath('es', '/')}>{tEs('notFound.back')}</a>
+    </p>
+  </div>
+</section>
+
+<style>
+  .nf { display: grid; place-items: center; min-height: 70vh; text-align: center; isolation: isolate; overflow: hidden; }
+  .nf :global(.nf__fondo) {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+  }
+  /* Velo oscuro para que el texto se lea bien sobre la imagen */
+  .nf::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: rgb(23 21 15 / 0.65);
+    pointer-events: none;
+  }
+  .nf__caixa { display: grid; justify-items: center; gap: var(--space-6); width: min(100% - 2rem, 40rem); }
+  .nf h1 { font-size: var(--text-2xl); text-transform: uppercase; letter-spacing: 0.04em; line-height: 1.05; }
+  .eyebrow{
+    font-size: var(--text-2xl);
+  }
+  .nf__es { margin: var(--space-4) 0 0; font-size: var(--text-sm); color: var(--texto-2); }
+  .nf__es a { color: var(--ouro-claro); text-underline-offset: 3px; }
+</style>

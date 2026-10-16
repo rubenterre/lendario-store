@@ -1,0 +1,189 @@
+---
+import { getLangFromUrl, useTranslations, localizedPath } from '../../i18n/utils';
+import { Image } from 'astro:assets';
+import fondo from "../../assets/images/newsletter/o-nubeiro_841px.webp";
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const beneficios = [t('newsletter.b1'), t('newsletter.b2'), t('newsletter.b3')];
+---
+
+<section class="section newsletter" id="newsletter" aria-labelledby="newsletter-titulo">
+  <div class="zona">
+    <div class="nl reveal">
+      <Image class="nl__fondo" src={fondo} alt="" widths={[1100, 1650, 2200]} sizes="100vw" loading="lazy" aria-hidden="true" />
+      <div class="nl__texto">
+        <p class="eyebrow">{t('newsletter.eyebrow')}</p>
+        <h2 id="newsletter-titulo">{t('newsletter.title')}</h2>
+        <p class="nl__lead">{t('newsletter.lead')}</p>
+        <ul class="nl__lista">
+          {beneficios.map((b) => <li>{b}</li>)}
+        </ul>
+      </div>
+
+      <form
+        class="nl__form"
+        novalidate
+        data-newsletter
+        data-lang={lang}
+        data-msg-sending={t('newsletter.sending')}
+        data-msg-ok={t('newsletter.ok')}
+        data-msg-email={t('newsletter.errEmail')}
+        data-msg-consent={t('newsletter.errConsent')}
+        data-msg-error={t('newsletter.errGeneric')}
+      >
+        <label class="nl__etiqueta" for="nl-email">{t('newsletter.label')}</label>
+        <input id="nl-email" name="email" type="email" required autocomplete="email" inputmode="email" maxlength="254" placeholder={t('newsletter.placeholder')} />
+
+        <div class="nl__trampa" aria-hidden="true">
+          <label>Web <input name="web" type="text" tabindex="-1" autocomplete="off" /></label>
+        </div>
+
+        <label class="nl__consentimento">
+          <input name="consent" type="checkbox" required />
+          <span>
+            {t('newsletter.consentPre')}<a href={localizedPath(lang, '/privacidade')}>{t('footer.privacy')}</a>{t('newsletter.consentPost')}
+          </span>
+        </label>
+
+        <button class="btn btn--comprar" type="submit" data-enviar>{t('newsletter.submit')}</button>
+        <p class="nl__estado" role="status" aria-live="polite" data-estado></p>
+        <p class="nl__nota">{t('newsletter.note')}</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-newsletter]');
+  if (form) {
+    const estado = form.querySelector<HTMLElement>('[data-estado]')!;
+    const boton = form.querySelector<HTMLButtonElement>('[data-enviar]')!;
+    const etiqueta = boton.textContent ?? '';
+    const d = form.dataset;
+    const mostrar = (texto: string, tipo: 'ok' | 'error' | '') => {
+      estado.textContent = texto;
+      estado.dataset.tipo = tipo;
+    };
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = (form.elements.namedItem('email') as HTMLInputElement).value.trim();
+      const consent = (form.elements.namedItem('consent') as HTMLInputElement).checked;
+      const web = (form.elements.namedItem('web') as HTMLInputElement).value;
+      if (!email || !(form.elements.namedItem('email') as HTMLInputElement).checkValidity()) return mostrar(d.msgEmail!, 'error');
+      if (!consent) return mostrar(d.msgConsent!, 'error');
+
+      boton.disabled = true;
+      boton.textContent = d.msgSending!;
+      form.setAttribute('aria-busy', 'true');
+      mostrar('', '');
+      try {
+        const r = await fetch('/api/newsletter', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, consent, web, lang: d.lang }),
+        });
+        if (r.ok) {
+          form.reset();
+          mostrar(d.msgOk!, 'ok');
+        } else {
+          const { error } = await r.json().catch(() => ({ error: '' }));
+          mostrar(error === 'invalid_email' ? d.msgEmail! : error === 'consent_required' ? d.msgConsent! : d.msgError!, 'error');
+        }
+      } catch {
+        mostrar(d.msgError!, 'error');
+      } finally {
+        boton.disabled = false;
+        boton.textContent = etiqueta;
+        form.removeAttribute('aria-busy');
+      }
+    });
+  }
+</script>
+
+<style>
+  .zona { width: min(100% - 2rem, 66rem); margin-inline: auto; }
+  .nl {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+    gap: var(--space-10, 2.5rem) clamp(2rem, 6vw, 4rem);
+    padding: clamp(1.75rem, 5vw, 3.5rem);
+    border: 1px solid var(--ouro-vello);
+    border-radius: 12px;
+    overflow: hidden;
+    isolation: isolate;
+    box-shadow: 0 20px 50px -25px rgb(0 0 0 / 0.8), inset 0 0 0 1px rgb(255 240 205 / 0.06);
+    transition:
+      opacity 0.9s var(--ease),
+      box-shadow 0.4s var(--ease),
+      transform 0.4s var(--ease);
+  }
+  /* Halo de ouro alrededor del borde al pasar el ratón (igual que Mundo Lendario) */
+  @media (hover: hover) {
+    .nl.is-visible:hover {
+      transform: translateY(-4px);
+      box-shadow:
+        0 0 0 1px color-mix(in oklab, var(--ouro-claro) 70%, transparent),
+        0 0 18px 4px color-mix(in oklab, var(--ouro-claro) 55%, transparent),
+        0 0 48px 12px color-mix(in oklab, var(--ouro-vello) 35%, transparent),
+        0 16px 36px rgb(0 0 0 / 0.55);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .nl { transition: box-shadow 0.4s var(--ease); }
+    .nl.is-visible:hover { transform: none; }
+  }
+  .nl :global(.nl__fondo) {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: left top;
+    pointer-events: none;
+  }
+  .nl__texto { display: grid; align-content: start; gap: var(--space-4); }
+  .nl__texto h2 { margin: 0; font-size: var(--text-2xl); text-transform: uppercase; letter-spacing: 0.04em; line-height: 1.05; }
+  .nl__lead { margin: 0; color: var(--texto-2); }
+  .nl__lista { display: grid; gap: var(--space-3); margin: 0; padding: 0; list-style: none; }
+  .nl__lista li { position: relative; padding-inline-start: 1.9rem; }
+  .nl__lista li::before {
+    content: '';
+    position: absolute;
+    inset-inline-start: 0;
+    top: 0.35em;
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 50%;
+    background: var(--ouro-claro);
+    box-shadow: 0 0 0 3px var(--tinta), 0 0 0 4px var(--ouro-vello);
+  }
+
+  .nl__form { display: grid; align-content: center; gap: var(--space-4); }
+  .nl__etiqueta { font-size: var(--text-sm); letter-spacing: 0.06em; text-transform: uppercase; color: var(--texto-2); }
+  .nl__form input[type='email'] {
+    width: 100%;
+    padding: 0.95em 1.1em;
+    font: inherit;
+    color: var(--texto);
+    background: rgb(0 0 0 / 0.45);
+    border: 1px solid var(--borde);
+    border-radius: var(--radio);
+    transition: border-color 0.3s var(--ease), box-shadow 0.3s var(--ease);
+  }
+  .nl__form input[type='email']::placeholder { color: var(--texto-2); opacity: 0.7; }
+  .nl__form input[type='email']:focus-visible { outline: none; border-color: var(--ouro-claro); box-shadow: 0 0 0 3px rgb(241 184 68 / 0.25); }
+  .nl__consentimento { display: grid; grid-template-columns: auto 1fr; gap: var(--space-3); align-items: start; font-size: var(--text-sm); color: var(--texto-2); cursor: pointer; }
+  .nl__consentimento input { width: 1.1rem; height: 1.1rem; margin-top: 0.2em; accent-color: var(--ouro-claro); }
+  .nl__consentimento a { color: var(--ouro-claro); text-underline-offset: 3px; }
+  .nl__form .btn { justify-self: start; }
+  .nl__form .btn:disabled { opacity: 0.6; cursor: progress; transform: none; }
+  .nl__estado { min-height: 1.4em; margin: 0; font-size: var(--text-sm); }
+  .nl__estado[data-tipo='ok'] { color: var(--ouro-claro); }
+  .nl__estado[data-tipo='error'] { color: #f0a08a; }
+  .nl__nota { margin: 0; font-size: var(--text-xs); color: var(--texto-2); }
+  .nl__trampa { position: absolute; inset-inline-start: -9999px; width: 1px; height: 1px; overflow: hidden; }
+</style>

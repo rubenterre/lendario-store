@@ -2,7 +2,7 @@
 title: "Lendario en Dálle Xogo: vémonos os días 26 e 27 de setembro"
 description: "Lendario estará presente en Dálle Xogo para que poidas coñecer en persoa a baralla inspirada na mitoloxía galega antes do seu lanzamento."
 pubDate: 2026-09-11
-heroImage: "../../assets/blog/dalle-xogo-2026.png"
+heroImage: "../../assets/blog/dalle-xogo-2026.jpeg"
 heroAlt: "Logo do evento Dálle Xogo"
 tags: ["Dálle Xogo", "Novidades"]
 draft: false
