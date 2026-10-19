@@ -5,10 +5,13 @@ import Mundo from '../components/sections/Mundo.astro';
 import Baralla from '../components/sections/Baralla.astro';
 import Produtos from '../components/sections/Produtos.astro';
 import Novas from '../components/sections/Novas.astro';
+import { catalogo } from '../lib/jsonld';
 import Newsletter from '../components/sections/Newsletter.astro';
+
+const datos = catalogo('gl', Astro.site ?? new URL(Astro.url.origin));
 ---
 
-<Layout>
+<Layout jsonld={datos}>
   <Hero />
   <Mundo />
   <Baralla />

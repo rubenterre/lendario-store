@@ -5,12 +5,15 @@ import Footer from '../components/layout/Footer.astro';
 import Carro from '../components/cart/Carro.astro';
 import IrArriba from '../components/layout/IrArriba.astro';
 import { getLangFromUrl, useTranslations, getAlternates, defaultLang } from '../i18n/utils';
+import { basico, serializar } from '../lib/jsonld';
 
 interface Props {
   title?: string;
   description?: string;
   image?: string;
   noindex?: boolean;
+  /** Datos estructurados extra (schema.org) para esta página */
+  jsonld?: object[];
 }
 
 const lang = getLangFromUrl(Astro.url);
@@ -21,6 +24,7 @@ const {
   description = t('site.description'),
   image = '/og-lendario.jpg',
   noindex = false,
+  jsonld = [],
 } = Astro.props;
 
 const siteName = 'Lendario';
@@ -30,6 +34,8 @@ const pageTitle = title.includes('Lendario') ? title : `${title} | Lendario`;
 const alternates = getAlternates(Astro.url, Astro.site);
 const canonicalURL = alternates.find((a) => a.lang === lang)!.href;
 const xDefault = alternates.find((a) => a.lang === defaultLang)!.href;
+
+const datosEstructurados = [...basico(lang, Astro.site ?? new URL(Astro.url.origin)), ...jsonld];
 
 const ogLocale = { gl: 'gl_ES', es: 'es_ES' } as const;
 const ogAlt = lang === 'gl'
@@ -52,10 +58,8 @@ const ogAlt = lang === 'gl'
     {alternates.map((a) => <link rel="alternate" hreflang={a.lang} href={a.href} />)}
     <link rel="alternate" hreflang="x-default" href={xDefault} />
 
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" sizes="any" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 
     <link rel="manifest" href="/manifest.webmanifest" />
@@ -83,6 +87,8 @@ const ogAlt = lang === 'gl'
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={imageURL.href} />
     <meta name="twitter:image:alt" content={ogAlt} />
+
+    <script type="application/ld+json" set:html={serializar(datosEstructurados)} />
   </head>
   <body>
     <a class="saltar" href="#contido">{t('a11y.skip')}</a>
