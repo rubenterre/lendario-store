@@ -111,17 +111,17 @@ export const produtos: Produto[] = [
     alt: { gl: 'Pack de 6 pegatinas de seres lendarios', es: 'Pack de 6 pegatinas de seres lendarios' },
   },
   {
-    id: 'pegatinas-holo',
+    id: 'chaveiro-moura',
     tipo: 'complemento',
-    nome: { gl: 'Pegatinas holográficas', es: 'Pegatinas holográficas' },
+    nome: { gl: 'Chaveiro de A Moura', es: 'Llavero de A Moura' },
     descricion: {
-      gl: 'As mesmas 6 pegatinas de seres lendarios, en acabado holográfico.',
-      es: 'Las mismas 6 pegatinas de seres lendarios, en acabado holográfico.',
+      gl: 'Chaveiro co deseño de A Moura, un dos seres da mitoloxía galega de Lendario.',
+      es: 'Llavero con el diseño de A Moura, uno de los seres de la mitología gallega de Lendario.',
     },
-    prezo: 600,
+    prezo: 300,
     max: 5,
     imaxe: null,
-    alt: { gl: 'Pack de 6 pegatinas holográficas de seres lendarios', es: 'Pack de 6 pegatinas holográficas de seres lendarios' },
+    alt: { gl: 'Chaveiro co deseño de A Moura', es: 'Llavero con el diseño de A Moura' },
   },
 ];
 
