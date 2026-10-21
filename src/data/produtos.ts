@@ -123,6 +123,19 @@ export const produtos: Produto[] = [
     imaxe: null,
     alt: { gl: 'Chaveiro co deseño de A Moura', es: 'Llavero con el diseño de A Moura' },
   },
+  {
+    id: 'marcapaxinas-madeira',
+    tipo: 'complemento',
+    nome: { gl: 'Marcapáxinas de abidueiro', es: 'Marcapáginas de abedúl' },
+    descricion: {
+      gl: 'Marcapáxinas de madeira gravada, con cordel de algodón e un abalorio. Un pequeno complemento para acompañar as túas lecturas. Medidas aproximadas: 3 x 14 cm e 3 mm de grosor. As dimensións poden variar lixeiramente.',
+      es: 'Marcapáginas de madera grabada, con cordel de algodón y un abalorio. Un pequeño complemento para acompañar tus lecturas. Medidas aproximadas: 3 x 14 cm y 3 mm de grosor. Las dimensiones pueden variar ligeramente.',
+    },
+    prezo: 300,
+    max: 5,
+    imaxe: null,
+    alt: { gl: 'Chaveiro co deseño de A Moura', es: 'Llavero con el diseño de A Moura' },
+  },
 ];
 
 export const edicions = produtos.filter((p) => p.tipo === 'edicion');
