@@ -2,7 +2,7 @@
 import { Image } from 'astro:assets';
 import fondo from '../../assets/ui/fondo_bretema.webp';
 import ProdutoCard from '../ProdutoCard.astro';
-import { edicions, complementos } from '../../data/produtos';
+import { edicions, libros, complementos } from '../../data/produtos';
 import { getLangFromUrl, useTranslations } from '../../i18n/utils';
 
 const t = useTranslations(getLangFromUrl(Astro.url));
@@ -26,6 +26,17 @@ const t = useTranslations(getLangFromUrl(Astro.url));
 
   <div class="zona edicions reveal">
     {edicions.map((p) => <ProdutoCard produto={p} variante="grande" />)}
+  </div>
+</section>
+
+<section class="section complementos" id="complementos" aria-labelledby="complementos-titulo">
+  <div class="zona">
+    <h2 id="complementos-titulo" style="font-size: var(--text-xl)">{t('extras.titleLibros')}</h2>
+    <p class="lead" style="margin-top: var(--space-3)">{t('extras.lead')}</p>
+
+    <div class="fila reveal">
+      {libros.map((p) => <ProdutoCard produto={p} />)}
+    </div>
   </div>
 </section>
 

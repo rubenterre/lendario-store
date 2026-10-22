@@ -1,10 +1,14 @@
 import type { Lang } from '../i18n/ui';
+import chaveiroMoura from '../assets/images/produtos/chaveiro-moura.webp';
+import pegatinas from '../assets/images/produtos/pegatinas.webp';
+import destinoViquingo from '../assets/images/produtos/destino-viquingo.webp';
+
 
 type Texto = Record<Lang, string>;
 
 export interface Produto {
   id: string;
-  tipo: 'edicion' | 'complemento';
+  tipo: 'edicion' | 'libros' | 'complemento';
   nome: Texto;
   /** Etiqueta pequena sobre o nome (p. ex. "Edición base") */
   eyebrow?: Texto;
@@ -90,12 +94,21 @@ export const produtos: Produto[] = [
   },
   {
     id: 'libro',
-    tipo: 'complemento',
+    tipo: 'libros',
     nome: { gl: 'Libro Grimorio Lendario', es: 'Libro Grimorio Lendario' },
     descricion: { gl: 'Publicación impresa de mitos, lendas e seres de Lendario', es: 'Publicación impresa de mitos, leyendas y seres de Lendario' },
     prezo: 990,
     imaxe: null,
     alt: { gl: 'Libro editorial A5 de Lendario', es: 'Libro editorial A5 de Lendario' },
+  },
+    {
+    id: 'destino-viquingo',
+    tipo: 'libros',
+    nome: { gl: 'Libro Destino viquingo', es: 'Libro Destino viquingo' },
+    descricion: { gl: 'Un libro para descubrir a presenza dos viquingos en Galicia. Outra proposta do autor de Lendario para seguir explorando o pasado do noso país.', es: 'Un libro para descubrir la presencia de los vikingos en Galicia. Otra propuesta del autor de Lendario para seguir explorando el pasado de nuestro país.' },
+    prezo: 1300,
+    imaxe: destinoViquingo.src,
+    alt: { gl: 'Libro Destino viquingo', es: 'Libro Destino viquingo' },
   },
   {
     id: 'pegatinas',
@@ -107,7 +120,7 @@ export const produtos: Produto[] = [
     },
     prezo: 400,
     max: 5,
-    imaxe: null,
+    imaxe: pegatinas.src,
     alt: { gl: 'Pack de 6 pegatinas de seres lendarios', es: 'Pack de 6 pegatinas de seres lendarios' },
   },
   {
@@ -120,7 +133,7 @@ export const produtos: Produto[] = [
     },
     prezo: 300,
     max: 5,
-    imaxe: null,
+    imaxe: chaveiroMoura.src,
     alt: { gl: 'Chaveiro co deseño de A Moura', es: 'Llavero con el diseño de A Moura' },
   },
   {
@@ -139,4 +152,5 @@ export const produtos: Produto[] = [
 ];
 
 export const edicions = produtos.filter((p) => p.tipo === 'edicion');
+export const libros = produtos.filter((p) => p.tipo === 'libros');
 export const complementos = produtos.filter((p) => p.tipo === 'complemento');
