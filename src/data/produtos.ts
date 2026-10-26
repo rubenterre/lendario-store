@@ -2,6 +2,9 @@ import type { Lang } from '../i18n/ui';
 import chaveiroMoura from '../assets/images/produtos/chaveiro-moura.webp';
 import pegatinas from '../assets/images/produtos/pegatinas.webp';
 import destinoViquingo from '../assets/images/produtos/destino-viquingo.webp';
+import grimarioLendario from '../assets/images/produtos/grimario_lendario_libro.webp';
+import edicionAprendiz from '../assets/images/produtos/Ediciones_lendarias_aprendiz.webp';
+import edicionBardo from '../assets/images/produtos/Ediciones_lendarias_bardo.webp';
 
 
 type Texto = Record<Lang, string>;
@@ -56,7 +59,7 @@ export const produtos: Produto[] = [
     },
     prezo: 1990,
     max: 20,
-    imaxe: null,
+    imaxe: edicionAprendiz.src,
     alt: {
       gl: 'Edición Druída Aprendiz: medallón do aprendiz',
       es: 'Edición Druida Aprendiz: medallón del aprendiz',
@@ -85,7 +88,7 @@ export const produtos: Produto[] = [
     max: 20,
     destacado: true,
     inclueRealzado: 2,
-    imaxe: null,
+    imaxe: edicionBardo.src,
     alt: {
       gl: 'Edición Bardo Lendario: medallón do bardo',
       es: 'Edición Bardo Lendario: medallón del bardo',
@@ -98,7 +101,7 @@ export const produtos: Produto[] = [
     nome: { gl: 'Libro Grimorio Lendario', es: 'Libro Grimorio Lendario' },
     descricion: { gl: 'Publicación impresa de mitos, lendas e seres de Lendario', es: 'Publicación impresa de mitos, leyendas y seres de Lendario' },
     prezo: 990,
-    imaxe: null,
+    imaxe: grimarioLendario.src,
     alt: { gl: 'Libro editorial A5 de Lendario', es: 'Libro editorial A5 de Lendario' },
   },
     {
@@ -135,20 +138,7 @@ export const produtos: Produto[] = [
     max: 5,
     imaxe: chaveiroMoura.src,
     alt: { gl: 'Chaveiro co deseño de A Moura', es: 'Llavero con el diseño de A Moura' },
-  },
-  {
-    id: 'marcapaxinas-madeira',
-    tipo: 'complemento',
-    nome: { gl: 'Marcapáxinas de abidueiro', es: 'Marcapáginas de abedúl' },
-    descricion: {
-      gl: 'Marcapáxinas de madeira gravada, con cordel de algodón e un abalorio. Un pequeno complemento para acompañar as túas lecturas. Medidas aproximadas: 3 x 14 cm e 3 mm de grosor. As dimensións poden variar lixeiramente.',
-      es: 'Marcapáginas de madera grabada, con cordel de algodón y un abalorio. Un pequeño complemento para acompañar tus lecturas. Medidas aproximadas: 3 x 14 cm y 3 mm de grosor. Las dimensiones pueden variar ligeramente.',
-    },
-    prezo: 300,
-    max: 5,
-    imaxe: null,
-    alt: { gl: 'Chaveiro co deseño de A Moura', es: 'Llavero con el diseño de A Moura' },
-  },
+  }
 ];
 
 export const edicions = produtos.filter((p) => p.tipo === 'edicion');
