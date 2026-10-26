@@ -1,6 +1,7 @@
 ---
 import type { Produto } from '../data/produtos';
 import { getLangFromUrl, useTranslations, formatPrice } from '../i18n/utils';
+import { envioPara } from '../data/envio';
 
 interface Props {
   produto: Produto;
@@ -14,13 +15,17 @@ const nome = produto.nome[lang];
 const descricion = produto.descricion[lang];
 const eyebrow = produto.eyebrow?.[lang];
 const inclue = produto.inclue?.[lang];
+const envioGratis = envioPara(produto.prezo) === 0;
 ---
 
 <article class:list={['produto', `produto--${variante}`]}>
   <div class="produto__cabeza">
   {
     produto.imaxe ? (
-      <img class="produto__imaxe" src={produto.imaxe} alt={produto.alt[lang]} loading="lazy" decoding="async" />
+      <div class="produto__media">
+        <img class="produto__imaxe" src={produto.imaxe} alt={produto.alt[lang]} loading="lazy" decoding="async" />
+        {envioGratis && <span class="produto__envio">{t('product.freeShipping')}</span>}
+      </div>
     ) : (
       <div class="medalla" role="img" aria-label={produto.alt[lang]}>
         {produto.insignia && <span class="medalla__cinta">{produto.insignia[lang]}</span>}
@@ -66,7 +71,39 @@ const inclue = produto.inclue?.[lang];
   .produto--compacta { --medalla: 7.5rem; gap: var(--space-6); }
   .produto__corpo { display: flex; flex-direction: column; align-items: flex-start; flex: 1; width: 100%; }
 
-  .produto__imaxe { width: 100%; height: auto; filter: drop-shadow(0 8px 20px rgb(0 0 0 / 0.55)); }
+  .produto__media { position: relative; width: 100%; }
+  .produto__imaxe { display: block; width: 100%; height: auto; filter: drop-shadow(0 8px 20px rgb(0 0 0 / 0.55)); }
+  .produto__envio {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    padding: 0.35em 0.9em;
+    font-family: var(--fonte-texto);
+    font-size: var(--text-xs);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #2a1d10;
+    background: linear-gradient(180deg, #e6c577, #c69635);
+    border: 1px solid #815825;
+    border-radius: 999px;
+    box-shadow: 0 3px 10px rgb(0 0 0 / 0.55), 0 0 0 0 rgb(230 197 119 / 0.7);
+    animation: envio-pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes envio-pulse {
+    0%, 100% {
+      transform: scale(1);
+      filter: brightness(1);
+/*       box-shadow: 0 3px 10px rgb(0 0 0 / 0.55), 0 0 0 0 rgb(230 197 119 / 0.7);
+ */    }
+    50% {
+      transform: scale(1.08);
+      filter: brightness(1.15);
+/*       box-shadow: 0 3px 10px rgb(0 0 0 / 0.55), 0 0 0 12px rgb(230 197 119 / 0);
+ */    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .produto__envio { animation: none; }
+  }
 
   /* Medallón provisional (se sustituye por la imagen de producto) */
   .medalla {
