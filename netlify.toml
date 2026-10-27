@@ -4,3 +4,6 @@
 
 [build.environment]
   NODE_VERSION = "22"
+  # SITE_URL es la URL pública (no un secreto) y aparece en README, robots.txt y astro.config.mjs.
+  # Se excluye SOLO esa clave: STRIPE_SECRET_KEY y BREVO_API_KEY siguen bajo escaneo.
+  SECRETS_SCAN_OMIT_KEYS = "SITE_URL"
