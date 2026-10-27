@@ -1,10 +1,9 @@
 /**
  * Datos de la tienda que se muestran en las políticas.
- * Rellena `email` (y, si quieres, `titular` y `enderezo`) antes de publicar:
  * mientras estén vacíos, no se muestran en la página.
  */
 export const tenda = {
-  email: 'info@rubenterre.com', // p. ej. 'hola@lendario.gal'
+  email: 'info@rubenterre.com', 
   titular: 'Rubén Terré', // nombre o razón social
   nif: '36177347A',
   enderezo: 'Praza de Europa, 14, 4B 15707 Santiago de Compostela (A Coruña), Galicia', // dirección postal para devoluciones/reclamaciones

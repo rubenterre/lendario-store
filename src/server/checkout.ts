@@ -10,6 +10,8 @@ export interface CheckoutEnv {
   SITE_URL?: string;
   /** Países de envío (ISO-2) separados por comas. Por defecto: ES. */
   STRIPE_SHIPPING_COUNTRIES?: string;
+  /** "true" genera una factura pagada (PDF) por pedido. Stripe cobra un 0,4 % extra (máx. 2 USD) por factura. */
+  STRIPE_INVOICES?: string;
 }
 
 const MAX_LINEAS = 10;
@@ -55,6 +57,7 @@ export async function handleCheckout(request: Request, env: CheckoutEnv): Promis
   for (const it of items as any[]) {
     const p = produtos.find((x) => x.id === it?.id);
     if (!p || !Number.isInteger(it?.qty) || it.qty < 1) return json({ error: 'invalid_items' }, 400);
+    if (p.agotado) return json({ error: 'sold_out', id: p.id }, 409);
     cantidades.set(p.id, (cantidades.get(p.id) ?? 0) + it.qty);
   }
   if (cantidades.size === 0 || cantidades.size > MAX_LINEAS) return json({ error: 'invalid_items' }, 400);
@@ -90,7 +93,18 @@ export async function handleCheckout(request: Request, env: CheckoutEnv): Promis
   f.set('success_url', `${base}${ruta}/gracias/?session_id={CHECKOUT_SESSION_ID}`);
   f.set('cancel_url', `${base}${ruta}/#edicions`);
 
-  f.set('metadata[items]', [...cantidades].map(([id, q]) => `${id}:${q}`).join(','));
+  const resumen = [...cantidades].map(([id, q]) => `${id}:${q}`).join(',');
+  f.set('metadata[items]', resumen);
+  // Aparece en el panel de Stripe y en los avisos de pago: qué se ha vendido de un vistazo.
+  f.set('payment_intent_data[description]', `Lendario · ${resumen}`);
+  f.set('payment_intent_data[metadata][items]', resumen);
+
+  // Factura pagada opcional (PDF). Requiere que la clave tenga permisos de Facturas y Clientes.
+  if (env.STRIPE_INVOICES === 'true') {
+    f.set('invoice_creation[enabled]', 'true');
+    f.set('invoice_creation[invoice_data][description]', 'Pedido Lendario');
+    f.set('invoice_creation[invoice_data][metadata][items]', resumen);
+  }
   f.set('metadata[lang]', lang);
   f.set('metadata[zona]', ZONA_DISPONIBLE);
 

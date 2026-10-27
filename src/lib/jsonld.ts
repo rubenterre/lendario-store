@@ -52,7 +52,7 @@ export function catalogo(lang: Lang, site: URL) {
       url: pagina,
       price: (p.prezo / 100).toFixed(2),
       priceCurrency: 'EUR',
-      availability: 'https://schema.org/InStock',
+      availability: p.agotado ? 'https://schema.org/OutOfStock' : 'https://schema.org/InStock',
       seller: { '@id': `${raiz}#organizacion` },
       eligibleRegion: { '@type': 'Country', name: 'ES' },
     },

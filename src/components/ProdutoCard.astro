@@ -53,9 +53,17 @@ const envioGratis = envioPara(produto.prezo) === 0;
     <div class="produto__compra">
       <p class="produto__prezo">{formatPrice(produto.prezo, lang)}</p>
       <p class="produto__iva">{t('product.vat')}</p>
-      <button type="button" class="btn btn--comprar" data-add={produto.id} aria-label={`${t('product.add')}: ${nome}`}>
-        {t('product.buy')}
-      </button>
+      {
+        produto.agotado ? (
+          <button type="button" class="btn btn--comprar btn--esgotado" disabled aria-label={`${t('product.soldOut')}: ${nome}`}>
+            {t('product.soldOut')}
+          </button>
+        ) : (
+          <button type="button" class="btn btn--comprar" data-add={produto.id} aria-label={`${t('product.add')}: ${nome}`}>
+            {t('product.buy')}
+          </button>
+        )
+      }
     </div>
   </div>
 </article>
@@ -69,6 +77,8 @@ const envioGratis = envioPara(produto.prezo) === 0;
     gap: var(--space-8);
   }
   .produto--compacta { --medalla: 7.5rem; gap: var(--space-6); }
+  .btn--esgotado, .btn--esgotado:hover { opacity: 0.55; cursor: not-allowed; filter: grayscale(0.6); }
+  .btn--esgotado::after { display: none; }
   .produto__corpo { display: flex; flex-direction: column; align-items: flex-start; flex: 1; width: 100%; }
 
   .produto__media { position: relative; width: 100%; }

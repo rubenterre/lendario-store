@@ -11,6 +11,7 @@ const catalogo = produtos.map((p) => ({
   nome: p.nome[lang],
   prezo: p.prezo,
   max: p.max ?? 99,
+  agotado: p.agotado === true,
   imaxe: typeof p.imaxe === 'string' ? p.imaxe : null,
   insignia: p.insignia?.[lang] ?? null,
 }));
@@ -21,6 +22,7 @@ const textos = {
   remove: t('cart.remove'),
   added: t('cart.added'),
   max: t('cart.max'),
+  soldOut: t('cart.soldOut'),
   unavailable: t('cart.unavailable'),
   error: t('cart.error'),
   free: t('cart.free'),
@@ -203,7 +205,7 @@ const envio = { gratisDesde: ENVIO_GRATIS_DESDE, tarifa: ENVIO_TARIFA, zona: ZON
 <script>
   import { obterLineas, engadir, quitar, fixarCantidade, subscribirse } from '../../lib/cart';
 
-  interface Item { id: string; nome: string; prezo: number; max: number; imaxe: string | null; insignia: string | null }
+  interface Item { id: string; nome: string; prezo: number; max: number; agotado: boolean; imaxe: string | null; insignia: string | null }
   const ler = <T,>(id: string): T => JSON.parse(document.getElementById(id)?.textContent ?? 'null');
   const catalogo = new Map(ler<Item[]>('carro-catalogo').map((p) => [p.id, p]));
   const txt = ler<Record<string, string>>('carro-textos');
@@ -284,8 +286,16 @@ const envio = { gratisDesde: ENVIO_GRATIS_DESDE, tarifa: ENVIO_TARIFA, zona: ZON
     return li;
   }
 
+  // Productos agotados que quedaron en el carro guardado (localStorage): se quitan y se avisa.
+  let avisarAgotado = false;
   function pintar() {
     const activo = (document.activeElement as HTMLElement | null)?.dataset?.foco;
+    const agotados = obterLineas().filter((l) => catalogo.get(l.id)?.agotado);
+    if (agotados.length) {
+      avisarAgotado = true;
+      agotados.forEach((l) => quitar(l.id)); // vuelve a llamar a pintar() por la suscripción
+      return;
+    }
     const lineas = obterLineas().filter((l) => catalogo.has(l.id));
     lista.replaceChildren(...lineas.map((l) => fila(l.id, l.qty, catalogo.get(l.id)!)));
     lista.hidden = pe.hidden = lineas.length === 0;
@@ -299,6 +309,11 @@ const envio = { gratisDesde: ENVIO_GRATIS_DESDE, tarifa: ENVIO_TARIFA, zona: ZON
     pistaEl.textContent = pistaEl.hidden ? '' : txt.hint.replace('{x}', prezo(env.gratisDesde - sub));
     aviso.hidden = true;
     actualizarPago();
+    if (avisarAgotado) {
+      avisarAgotado = false;
+      aviso.textContent = txt.soldOut;
+      aviso.hidden = false;
+    }
 
     if (activo && dlg.open) {
       const volver = dlg.querySelector<HTMLElement>(`[data-foco="${activo}"]`) ?? dlg.querySelector<HTMLElement>('[data-pechar]');
@@ -332,7 +347,7 @@ const envio = { gratisDesde: ENVIO_GRATIS_DESDE, tarifa: ENVIO_TARIFA, zona: ZON
     const add = t.closest<HTMLElement>('[data-add]');
     if (add) {
       const id = add.dataset.add!;
-      if (!catalogo.has(id)) return;
+      if (!catalogo.has(id) || catalogo.get(id)!.agotado) return;
       const actual = obterLineas().find((l) => l.id === id)?.qty ?? 0;
       if (actual >= catalogo.get(id)!.max) {
         anuncio.textContent = txt.max;
@@ -371,7 +386,12 @@ const envio = { gratisDesde: ENVIO_GRATIS_DESDE, tarifa: ENVIO_TARIFA, zona: ZON
         actualizarPago();
         return;
       }
-      const { url } = await r.json();
+      const { url, error } = await r.json();
+      if (r.status === 409 && error === 'sold_out') {
+        mostrar(txt.soldOut);
+        actualizarPago();
+        return;
+      }
       if (!r.ok || typeof url !== 'string') throw new Error('checkout');
       location.assign(url);
     } catch {

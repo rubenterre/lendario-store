@@ -22,6 +22,8 @@ export interface Produto {
   prezo: number;
   /** Máximo por pedido (la tirada es de 20 unidades por edición) */
   max?: number;
+  /** Agotado: bloquea el botón, el carro, el servidor (/api/checkout) y marca OutOfStock en el JSON-LD. Poner a true y desplegar. */
+  agotado?: boolean;
   /** Imagen (medallón/producto): ruta en /public o URL. null = medallón provisional en CSS */
   imaxe: string | null;
   alt: Texto;
