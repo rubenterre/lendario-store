@@ -10,4 +10,8 @@ export default (request: Request) =>
     SITE_URL: process.env.SITE_URL,
   });
 
-export const config = { path: '/api/newsletter' };
+// Límite de peticiones por IP (Netlify): evita enviar correos de confirmación de Brevo en masa.
+export const config = {
+  path: '/api/newsletter',
+  rateLimit: { windowLimit: 5, windowSize: 60, aggregateBy: ['ip', 'domain'] },
+};

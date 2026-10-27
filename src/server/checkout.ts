@@ -108,14 +108,22 @@ export async function handleCheckout(request: Request, env: CheckoutEnv): Promis
   f.set('metadata[lang]', lang);
   f.set('metadata[zona]', ZONA_DISPONIBLE);
 
-  const r = await fetch('https://api.stripe.com/v1/checkout/sessions', {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${env.STRIPE_SECRET_KEY}`,
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body: f,
-  });
+  // Si Stripe no responde en 10 s cortamos: el cliente ve un error claro en vez de una espera infinita.
+  let r: Response;
+  try {
+    r = await fetch('https://api.stripe.com/v1/checkout/sessions', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${env.STRIPE_SECRET_KEY}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: f,
+      signal: AbortSignal.timeout(10000),
+    });
+  } catch (e) {
+    console.error('[checkout] Stripe sin respuesta:', e instanceof Error ? e.message : e);
+    return json({ error: 'upstream_timeout' }, 504);
+  }
   const sesion: any = await r.json().catch(() => null);
   if (!r.ok || typeof sesion?.url !== 'string') {
     console.error('[checkout] Stripe', r.status, sesion?.error?.message);
