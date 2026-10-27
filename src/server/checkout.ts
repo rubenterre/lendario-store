@@ -1,7 +1,7 @@
 // Crea una sesión de Stripe Checkout. Usa solo APIs web estándar (fetch/Request/Response),
 // así que sirve igual en Netlify, Cloudflare, Vercel o Node.
 // Los precios salen SIEMPRE del catálogo del servidor; del navegador solo se aceptan id + cantidad.
-import { produtos } from '../data/produtos';
+import { catalogo as produtos } from '../data/catalogo'; // sin imágenes: esbuild (Netlify) no sabe leer .webp
 import { ENVIO_GRATIS_DESDE, ENVIO_TARIFA, ZONA_DISPONIBLE } from '../data/envio';
 
 export interface CheckoutEnv {
