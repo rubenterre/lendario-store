@@ -166,6 +166,7 @@ const cartas = [
   .seta:disabled { opacity: 0.35; cursor: default; }
 </style>
 
+
 <script>
   const raiz = document.querySelector<HTMLElement>('[data-baralla]');
   const pista = raiz?.querySelector<HTMLElement>('.carrusel__pista');
@@ -200,6 +201,13 @@ const cartas = [
       pista.scrollTo({ left: destino, behavior: reducido.matches ? 'auto' : 'smooth' });
     };
 
+    const inicializarBaraja = () => {
+      const c0 = cartas.find((c) => c.hasAttribute('data-inicial')) ?? cartas[0];
+      const destino = c0.offsetLeft + c0.offsetWidth / 2 - pista.clientWidth / 2;
+      pista.scrollTo({ left: destino, behavior: 'instant' });
+      actualizar();
+    };
+
     pista.addEventListener('scroll', () => { if (!tick) { tick = true; requestAnimationFrame(actualizar); } }, { passive: true });
     window.addEventListener('resize', actualizar);
     botones.forEach((b) =>
@@ -210,9 +218,12 @@ const cartas = [
       if (e.key === 'ArrowRight') { e.preventDefault(); irA(Number(pista.dataset.activa ?? 0) + 1); }
       if (e.key === 'ArrowLeft') { e.preventDefault(); irA(Number(pista.dataset.activa ?? 0) - 1); }
     });
-    // Carta inicial: la marcada con data-inicial (02_comodin), centrada sin animación
-    const c0 = cartas.find((c) => c.hasAttribute('data-inicial')) ?? cartas[0];
-    pista.scrollTo({ left: c0.offsetLeft + c0.offsetWidth / 2 - pista.clientWidth / 2, behavior: 'instant' });
-    actualizar();
+
+    // Esperar a que la página y recursos carguen por completo para calcular los offsets reales
+    if (document.readyState === 'complete') {
+      inicializarBaraja();
+    } else {
+      window.addEventListener('load', inicializarBaraja, { once: true });
+    }
   }
 </script>
