@@ -54,7 +54,7 @@ export const catalogo: ProdutoBase[] = [
       ],
     },
     prezo: 1990,
-    max: 20,
+    max: 0,
     alt: {
       gl: 'Edición Druída Aprendiz: medallón do aprendiz',
       es: 'Edición Druida Aprendiz: medallón del aprendiz',
@@ -80,7 +80,7 @@ export const catalogo: ProdutoBase[] = [
       ],
     },
     prezo: 2990,
-    max: 20,
+    max: 0,
     destacado: true,
     inclueRealzado: 2,
     alt: {
@@ -95,6 +95,7 @@ export const catalogo: ProdutoBase[] = [
     nome: { gl: 'Libro Grimorio Lendario', es: 'Libro Grimorio Lendario' },
     descricion: { gl: 'Publicación impresa de mitos, lendas e seres de Lendario', es: 'Publicación impresa de mitos, leyendas y seres de Lendario' },
     prezo: 990,
+    max: 20,
     alt: { gl: 'Libro editorial A5 de Lendario', es: 'Libro editorial A5 de Lendario' },
   },
     {
@@ -103,6 +104,7 @@ export const catalogo: ProdutoBase[] = [
     nome: { gl: 'Libro Destino viquingo', es: 'Libro Destino viquingo' },
     descricion: { gl: 'Un libro para descubrir a presenza dos viquingos en Galicia. Outra proposta do autor de Lendario para seguir explorando o pasado do noso país.', es: 'Un libro para descubrir la presencia de los vikingos en Galicia. Otra propuesta del autor de Lendario para seguir explorando el pasado de nuestro país.' },
     prezo: 1300,
+    max: 10,
     alt: { gl: 'Libro Destino viquingo', es: 'Libro Destino viquingo' },
   },
   {
